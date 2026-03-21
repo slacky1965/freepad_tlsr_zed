@@ -1,0 +1,6 @@
+out/
+doc_local/
+*.bin
+*.zigbee
+
+
