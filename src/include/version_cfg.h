@@ -28,7 +28,7 @@
 #include "../common/comm_cfg.h"
 
 #define APP_RELEASE                         0x10        //app release 1.0
-#define APP_BUILD                           0x05        //app build 05, full version - v1.0.05
+#define APP_BUILD                           0x01        //app build 01, full version - v1.0.01
 
 #define STACK_RELEASE                       0x30        //stack release 3.0
 #define STACK_BUILD                         0x01        //stack build 01
@@ -56,7 +56,7 @@
  * 0x04 - Watermeter
  * 0x07 - ElectricityMeter
  * 0x08 - Template
- * 0x09 - Remote Control
+ * 0x09 - Free Pad
  * 0x0a - Livolo_switch_2keys
  * 0x0b - Livolo_switch_1key
  * 0x0c - Livolo_switch_1key_dimmable

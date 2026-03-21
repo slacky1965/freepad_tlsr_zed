@@ -300,7 +300,7 @@ APP_DEBUG(DEBUG_ZCL_CB_EN, "app_zclCfgReportCmd\r\n");
         }
     }
 
-    app_setPollRate(TIMEOUT_30SEC);
+    app_setPollRate(TIMEOUT_1MIN);
 }
 
 /*********************************************************************

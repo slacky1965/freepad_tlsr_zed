@@ -59,7 +59,7 @@ static int32_t set_pollRateCb(void *args) {
 
 void app_setPollRate(uint32_t sec) {
 
-    APP_DEBUG(DEBUG_PM_EN, "app_setPollRate(). sec: %d\r\n", sec);
+    APP_DEBUG(UART_PRINTF_MODE, "app_setPollRate(). sec: %d\r\n", sec);
 
     g_appCtx.not_sleep = true;
 

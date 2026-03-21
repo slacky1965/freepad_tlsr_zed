@@ -1183,6 +1183,20 @@ zcl_groupAttr_t g_zcl_groupAttrs[MAX_BUTTON_NUM] =
     {.nameSupport = 0},
     {.nameSupport = 0},
     {.nameSupport = 0},
+    {.nameSupport = 0},
+    {.nameSupport = 0},
+    {.nameSupport = 0},
+    {.nameSupport = 0},
+    {.nameSupport = 0},
+    {.nameSupport = 0},
+    {.nameSupport = 0},
+    {.nameSupport = 0},
+    {.nameSupport = 0},
+    {.nameSupport = 0},
+    {.nameSupport = 0},
+    {.nameSupport = 0},
+    {.nameSupport = 0},
+    {.nameSupport = 0},
 };
 
 const zclAttrInfo_t group1_attrTbl[] =
@@ -1198,18 +1212,39 @@ const zclAttrInfo_t group1_attrTbl[] =
 
 //#ifdef ZCL_SCENE
 /* Scene */
-zcl_sceneAttr_t g_zcl_sceneAttrs[MAX_BUTTON_NUM] =
-{
-    {
-        .sceneCount     = 0,
-        .currentScene   = 0,
-        .currentGroup   = 0x0000,
-        .sceneValid     = FALSE,
-        .nameSupport    = 0,
-        .customScene    = 0,
-        .customGroup    = 0,
-    },
+zcl_sceneAttr_t g_zcl_sceneAttrs[MAX_BUTTON_NUM] = {
+    {0},
+    {0},
+    {0},
+    {0},
+    {0},
+    {0},
+    {0},
+    {0},
+    {0},
+    {0},
+    {0},
+    {0},
+    {0},
+    {0},
+    {0},
+    {0},
+    {0},
+    {0},
+    {0},
+    {0},
 };
+//{
+//    {
+//        .sceneCount     = 0,
+//        .currentScene   = 0,
+//        .currentGroup   = 0x0000,
+//        .sceneValid     = FALSE,
+//        .nameSupport    = 0,
+//        .customScene    = 0,
+//        .customGroup    = 0,
+//    },
+//};
 
 const zclAttrInfo_t scene1_attrTbl[] = {
     { ZCL_ATTRID_SCENE_SCENE_COUNT,         ZCL_UINT8,    R,  (uint8_t*)&g_zcl_sceneAttrs[0].sceneCount     },

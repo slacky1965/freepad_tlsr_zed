@@ -170,6 +170,24 @@ void user_app_init(void)
     zcl_register(APP_ENDPOINT4, APP_EP4_CB_CLUSTER_NUM, (zcl_specClusterInfo_t *)g_appEp4ClusterList);
     zcl_register(APP_ENDPOINT5, APP_EP5_CB_CLUSTER_NUM, (zcl_specClusterInfo_t *)g_appEp5ClusterList);
     zcl_register(APP_ENDPOINT6, APP_EP6_CB_CLUSTER_NUM, (zcl_specClusterInfo_t *)g_appEp6ClusterList);
+    zcl_register(APP_ENDPOINT7, APP_EP7_CB_CLUSTER_NUM, (zcl_specClusterInfo_t *)g_appEp7ClusterList);
+    zcl_register(APP_ENDPOINT8, APP_EP8_CB_CLUSTER_NUM, (zcl_specClusterInfo_t *)g_appEp8ClusterList);
+    if (device_model == DEVICE_BUTTON_12 || device_model == DEVICE_BUTTON_20) {
+        zcl_register(APP_ENDPOINT9, APP_EP9_CB_CLUSTER_NUM, (zcl_specClusterInfo_t *)g_appEp9ClusterList);
+        zcl_register(APP_ENDPOINT10, APP_EP10_CB_CLUSTER_NUM, (zcl_specClusterInfo_t *)g_appEp10ClusterList);
+        zcl_register(APP_ENDPOINT11, APP_EP11_CB_CLUSTER_NUM, (zcl_specClusterInfo_t *)g_appEp11ClusterList);
+        zcl_register(APP_ENDPOINT12, APP_EP12_CB_CLUSTER_NUM, (zcl_specClusterInfo_t *)g_appEp12ClusterList);
+    }
+    if (device_model == DEVICE_BUTTON_20) {
+        zcl_register(APP_ENDPOINT13, APP_EP13_CB_CLUSTER_NUM, (zcl_specClusterInfo_t *)g_appEp13ClusterList);
+        zcl_register(APP_ENDPOINT14, APP_EP14_CB_CLUSTER_NUM, (zcl_specClusterInfo_t *)g_appEp14ClusterList);
+        zcl_register(APP_ENDPOINT15, APP_EP15_CB_CLUSTER_NUM, (zcl_specClusterInfo_t *)g_appEp15ClusterList);
+        zcl_register(APP_ENDPOINT16, APP_EP16_CB_CLUSTER_NUM, (zcl_specClusterInfo_t *)g_appEp16ClusterList);
+        zcl_register(APP_ENDPOINT17, APP_EP17_CB_CLUSTER_NUM, (zcl_specClusterInfo_t *)g_appEp17ClusterList);
+        zcl_register(APP_ENDPOINT18, APP_EP18_CB_CLUSTER_NUM, (zcl_specClusterInfo_t *)g_appEp18ClusterList);
+        zcl_register(APP_ENDPOINT19, APP_EP19_CB_CLUSTER_NUM, (zcl_specClusterInfo_t *)g_appEp19ClusterList);
+        zcl_register(APP_ENDPOINT20, APP_EP20_CB_CLUSTER_NUM, (zcl_specClusterInfo_t *)g_appEp20ClusterList);
+    }
 
 #if ZCL_OTA_SUPPORT
     ota_init(OTA_TYPE_CLIENT, (af_simple_descriptor_t *)&app_ep1Desc, &app_otaInfo, &app_otaCb);

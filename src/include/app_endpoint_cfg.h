@@ -68,7 +68,7 @@ typedef struct{
     uint16_t currentGroup;
     uint8_t  customScene;
     uint16_t customGroup;
-}zcl_sceneAttr_t;
+} zcl_sceneAttr_t;
 
 /**
  *  @brief Defined for power configuration cluster attributes
