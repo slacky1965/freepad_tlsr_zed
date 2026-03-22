@@ -14,10 +14,6 @@ typedef enum {
 
 extern bool factory_reset;
 
-//static inline unsigned int gpio_read_cache(u32 pin, u8 *p) {
-//    return p[pin>>8] & (pin & 0xff);
-//}
-
 void button_handler();
 bool button_idle();
 void button_init();
