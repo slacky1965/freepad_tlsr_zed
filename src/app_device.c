@@ -43,11 +43,11 @@ static void device_model_init() {
 #if UART_PRINTF_MODE
 static void print_setting_sr(nv_sts_t st, device_settings_t *device_settings_tmp, bool save) {
 
-    DEBUG(DEBUG_SAVE_EN, "Settings %s. Return: %s\r\n", save?"saved":"restored", st==NV_SUCC?"Ok":"Error");
+    APP_DEBUG(DEBUG_SAVE_EN, "Settings %s. Return: %s\r\n", save?"saved":"restored", st==NV_SUCC?"Ok":"Error");
 
     for (uint8_t i = 0; i < MAX_BUTTON_NUM; i++) {
-        DEBUG(DEBUG_SAVE_EN, "switchActions%d:     0x%02x\r\n", i, device_settings_tmp->switchActions[i]);
-        DEBUG(DEBUG_SAVE_EN, "switchType%d:        0x%02x\r\n", i, device_settings_tmp->switchType[i]);
+        APP_DEBUG(DEBUG_SAVE_EN, "switchActions%d:     0x%02x\r\n", i, device_settings_tmp->switchActions[i]);
+        APP_DEBUG(DEBUG_SAVE_EN, "switchType%d:        0x%02x\r\n", i, device_settings_tmp->switchType[i]);
     }
 
 }
@@ -59,7 +59,7 @@ nv_sts_t device_settings_default() {
 
 #if NV_ENABLE
 
-    DEBUG(UART_PRINTF_MODE, "Saved device default settings\r\n");
+    APP_DEBUG(UART_PRINTF_MODE, "Saved device default settings\r\n");
 
     for (uint8_t i = 0; i < MAX_BUTTON_NUM; i++) {
         device_settings.switchActions[i] = ZCL_SWITCH_ACTION_TOGGLE;
@@ -91,14 +91,14 @@ nv_sts_t device_settings_restore() {
 
     if (st == NV_SUCC && device_settings_tmp.crc == checksum((uint8_t*)&device_settings_tmp, sizeof(device_settings_t)-1)) {
 
-        DEBUG(UART_PRINTF_MODE, "Restored device settings\r\n");
+        APP_DEBUG(UART_PRINTF_MODE, "Restored device settings\r\n");
 #if UART_PRINTF_MODE
         print_setting_sr(st, &device_settings_tmp, false);
 #endif
 
     } else {
         /* default config */
-        DEBUG(UART_PRINTF_MODE, "Default device settings \r\n");
+        APP_DEBUG(UART_PRINTF_MODE, "Default device settings \r\n");
 
         for (uint8_t i = 0; i < MAX_BUTTON_NUM; i++) {
             device_settings_tmp.switchActions[i] = ZCL_SWITCH_ACTION_TOGGLE;
@@ -130,7 +130,7 @@ nv_sts_t device_settings_save() {
 
 #if NV_ENABLE
 
-    DEBUG(UART_PRINTF_MODE, "Saved device settings\r\n");
+    APP_DEBUG(UART_PRINTF_MODE, "Saved device settings\r\n");
 
     device_settings.crc = checksum((uint8_t*)&device_settings, sizeof(device_settings_t)-1);
     st = nv_flashWriteNew(1, NV_MODULE_APP,  NV_ITEM_APP_USER_CFG, sizeof(device_settings_t), (uint8_t*)&device_settings);
@@ -152,16 +152,16 @@ void device_model_restore() {
 #if UART_PRINTF_MODE
         switch(device_model) {
             case DEVICE_BUTTON_8:
-                DEBUG(UART_PRINTF_MODE, "Model restore: FreePad-08K-SlD\r\n");
+                APP_DEBUG(UART_PRINTF_MODE, "Model restore: FreePad-08K-SlD\r\n");
                 break;
             case DEVICE_BUTTON_12:
-                DEBUG(UART_PRINTF_MODE, "Model restore: FreePad-12K-SlD\r\n");
+                APP_DEBUG(UART_PRINTF_MODE, "Model restore: FreePad-12K-SlD\r\n");
                 break;
             case DEVICE_BUTTON_20:
-                DEBUG(UART_PRINTF_MODE, "Model restore: FreePad-20K-SlD\r\n");
+                APP_DEBUG(UART_PRINTF_MODE, "Model restore: FreePad-20K-SlD\r\n");
                 break;
             default:
-                DEBUG(UART_PRINTF_MODE, "Model restore: FreePad-08K-SlD\r\n");
+                APP_DEBUG(UART_PRINTF_MODE, "Model restore: FreePad-08K-SlD\r\n");
                 break;
         }
 #endif
@@ -171,16 +171,16 @@ void device_model_restore() {
 #if UART_PRINTF_MODE
         switch(device_model) {
             case DEVICE_BUTTON_8:
-                DEBUG(UART_PRINTF_MODE, "Model restore: FreePad-08K-SlD\r\n");
+                APP_DEBUG(UART_PRINTF_MODE, "Model restore: FreePad-08K-SlD\r\n");
                 break;
             case DEVICE_BUTTON_12:
-                DEBUG(UART_PRINTF_MODE, "Model restore: FreePad-12K-SlD\r\n");
+                APP_DEBUG(UART_PRINTF_MODE, "Model restore: FreePad-12K-SlD\r\n");
                 break;
             case DEVICE_BUTTON_20:
-                DEBUG(UART_PRINTF_MODE, "Model restore: FreePad-20K-SlD\r\n");
+                APP_DEBUG(UART_PRINTF_MODE, "Model restore: FreePad-20K-SlD\r\n");
                 break;
             default:
-                DEBUG(UART_PRINTF_MODE, "Model restore: FreePad-08K-SlD\r\n");
+                APP_DEBUG(UART_PRINTF_MODE, "Model restore: FreePad-08K-SlD\r\n");
                 break;
         }
 #endif
@@ -201,16 +201,16 @@ void device_model_save(uint8_t model) {
 #if UART_PRINTF_MODE
         switch(device_model) {
             case DEVICE_BUTTON_8:
-                DEBUG(UART_PRINTF_MODE, "Model save: FreePad-08K-SlD\r\n");
+                APP_DEBUG(UART_PRINTF_MODE, "Model save: FreePad-08K-SlD\r\n");
                 break;
             case DEVICE_BUTTON_12:
-                DEBUG(UART_PRINTF_MODE, "Model save: FreePad-12K-SlD\r\n");
+                APP_DEBUG(UART_PRINTF_MODE, "Model save: FreePad-12K-SlD\r\n");
                 break;
             case DEVICE_BUTTON_20:
-                DEBUG(UART_PRINTF_MODE, "Model save: FreePad-20K-SlD\r\n");
+                APP_DEBUG(UART_PRINTF_MODE, "Model save: FreePad-20K-SlD\r\n");
                 break;
             default:
-                DEBUG(UART_PRINTF_MODE, "Model save: FreePad-08K-SlD\r\n");
+                APP_DEBUG(UART_PRINTF_MODE, "Model save: FreePad-08K-SlD\r\n");
                 break;
         }
 #endif

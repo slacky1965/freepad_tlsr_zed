@@ -19,7 +19,7 @@ void app_scene_send(uint8_t ep) {
         dstEpInfo.dstAddrMode = APS_SHORT_GROUPADDR_NOEP;
         dstEpInfo.dstAddr.shortAddr = addrGroup;
         st = zcl_scene_recallSceneCmd(ep, &dstEpInfo, FALSE, &recallScene);
-        DEBUG(DEBUG_SCENE_EN, "Recall scene command, status: 0x%02x,  ep: %d, sceneID: %d, group: %d\r\n", st, ep, recallScene.sceneId, recallScene.groupId);
+        APP_DEBUG(DEBUG_SCENE_EN, "Recall scene command, status: 0x%02x,  ep: %d, sceneID: %d, group: %d\r\n", st, ep, recallScene.sceneId, recallScene.groupId);
     } else {
         aps_binding_entry_t *bind_tbl = bindTblEntryGet();
         for (uint8_t j = 0; j < APS_BINDING_TABLE_NUM; j++) {
@@ -53,7 +53,7 @@ void app_scene_send(uint8_t ep) {
                 }
                 APP_DEBUG(DEBUG_SCENE_EN, "status: 0x%02x\r\n", st);
 #endif
-                DEBUG(DEBUG_SCENE_EN, "Recall scene command EP: %d, sceneID: %d, groupID: %d\r\n", ep, recallScene.sceneId, recallScene.groupId);
+                APP_DEBUG(DEBUG_SCENE_EN, "Recall scene command EP: %d, sceneID: %d, groupID: %d\r\n", ep, recallScene.sceneId, recallScene.groupId);
             }
             bind_tbl++;
         }

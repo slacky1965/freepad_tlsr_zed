@@ -289,7 +289,7 @@ APP_DEBUG(DEBUG_ZCL_CB_EN, "app_zclCfgReportCmd\r\n");
     if (clusterId == ZCL_CLUSTER_GEN_POWER_CFG) {
         for (uint8_t i = 0; i < pCfgReportCmd->numAttr; i++) {
             if (pCfgReportCmd->attrList[i].attrID == ZCL_ATTRID_BATTERY_PERCENTAGE_REMAINING) {
-                DEBUG(DEBUG_REPORTING_EN, "Battery reporting configure - ep: %d, clId: 0x%04x, attrId: 0x%04x, maxInterval: %d\r\n",
+                APP_DEBUG(DEBUG_REPORTING_EN, "Battery reporting configure - ep: %d, clId: 0x%04x, attrId: 0x%04x, maxInterval: %d\r\n",
                         endPoint, clusterId, pCfgReportCmd->attrList[i].attrID, pCfgReportCmd->attrList[i].maxReportInt);
 
                 if (g_appCtx.timerBatteryEvt) {

@@ -2,7 +2,7 @@
 
 //void forceReportBattery(void *args) {
 //
-//    DEBUG(DEBUG_BATTERY_EN, "forceReportBattery()\r\n");
+//    APP_DEBUG(DEBUG_BATTERY_EN, "forceReportBattery()\r\n");
 //
 //    struct report_t {
 //        u8 numAttr;

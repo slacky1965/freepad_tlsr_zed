@@ -27,6 +27,7 @@
  * INCLUDES
  */
 #include "zcl_include.h"
+#include "app_utility.h"
 
 #define REPORT_DEBUG_ENABLE     0
 
@@ -445,7 +446,7 @@ _CODE_ZCL_ static void reportAttrs(void)
                     u8 dataLen = zcl_getAttrSize(pAttrEntry->type, pAttrEntry->data);
                     dataLen = (dataLen > REPORTABLE_CHANGE_MAX_ANALOG_SIZE) ? (REPORTABLE_CHANGE_MAX_ANALOG_SIZE) : (dataLen);
 
-                    DEBUG(REPORT_DEBUG_ENABLE, "RP: cID = %x, aID = %x, min = %d, max = %d\r\n",
+                    APP_DEBUG(REPORT_DEBUG_ENABLE, "RP: cID = %x, aID = %x, min = %d, max = %d\r\n",
                           pEntry->clusterID, pEntry->attrID, pEntry->minIntCnt, pEntry->maxIntCnt);
 
                     if (!pEntry->maxIntCnt && pEntry->maxInterval) {
@@ -493,7 +494,7 @@ _CODE_ZCL_ static void reportAttrs(void)
             dstEpInfo.profileId = profileID;
 
             zcl_sendReportAttrsCmd(endpoint, &dstEpInfo, TRUE, ZCL_FRAME_SERVER_CLIENT_DIR, clusterID, (zclReportCmd_t *)&report);
-            DEBUG(DEBUG_REPORTING_EN, "ep: 0x%04x, cl: 0x%04x, attr: 0x%04x, time: 0x%08x\r\n",
+            APP_DEBUG(DEBUG_REPORTING_EN, "ep: 0x%04x, cl: 0x%04x, attr: 0x%04x, time: 0x%08x\r\n",
                     endpoint, clusterID, report.attr[0].attrID, clock_time());
         }
     } while (again);
@@ -528,7 +529,7 @@ _CODE_ZCL_ static s32 reportAttrTimerCb(void *arg)
 {
     zcl_reportTimerEvt_t *pReportTimer = (zcl_reportTimerEvt_t *)arg;
 
-    DEBUG(REPORT_DEBUG_ENABLE, "reportAttrTimerCb: %x\r\n", (u32)pReportTimer);
+    APP_DEBUG(REPORT_DEBUG_ENABLE, "reportAttrTimerCb: %x\r\n", (u32)pReportTimer);
 
     if (pReportTimer->pEntry) {
         reportCfgInfo_t *pEntry = pReportTimer->pEntry;
@@ -551,7 +552,7 @@ _CODE_ZCL_ static s32 reportAttrTimerCb(void *arg)
             }
         }
 
-        DEBUG(REPORT_DEBUG_ENABLE, "cID = %x, attrID = %x, min = %d, max = %d, sec = %d\r\n",
+        APP_DEBUG(REPORT_DEBUG_ENABLE, "cID = %x, attrID = %x, min = %d, max = %d, sec = %d\r\n",
               pEntry->clusterID, pEntry->attrID, pEntry->minIntCnt, pEntry->maxIntCnt, pReportTimer->seconds);
 
         reportingTimerStart();
@@ -657,7 +658,7 @@ _CODE_ZCL_ static void reportAttrTimerStart(void)
             }
 
             if (!pTimerEvt->pEntry) {
-                DEBUG(REPORT_DEBUG_ENABLE, "SET_Timer: cID = %x, attrID = %x, sec = %d\r\n",
+                APP_DEBUG(REPORT_DEBUG_ENABLE, "SET_Timer: cID = %x, attrID = %x, sec = %d\r\n",
                       pEntry->clusterID, pEntry->attrID, seconds);
 
                 pTimerEvt->pEntry = pEntry;
