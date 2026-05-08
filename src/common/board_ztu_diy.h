@@ -84,5 +84,7 @@
 #define PB1_FUNC                AS_GPIO
 #define PULL_WAKEUP_SRC_PB1     PM_PIN_PULLUP_10K
 
+#define KEY_ROW                 {ROW1_GPIO, ROW2_GPIO, ROW3_GPIO, ROW4_GPIO}
+#define KEY_LINE                {LINE1_GPIO, LINE2_GPIO, LINE3_GPIO, LINE4_GPIO, LINE5_GPIO}
 
 #endif /* SRC_COMMON_BOARD_ZTU_DIY_H_ */

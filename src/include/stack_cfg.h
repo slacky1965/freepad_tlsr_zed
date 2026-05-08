@@ -42,6 +42,7 @@
  */
 #define SECURITY_ENABLE							1
 
+#define MAX_ACTIVE_EP_NUMBER                    20
 
 /**********************************************************************
  * Following parameter need user to adjust according the app requirement

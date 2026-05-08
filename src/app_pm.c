@@ -16,6 +16,14 @@ static drv_pm_pinCfg_t pin_PmCfg[] = {
         ROW2_GPIO,
         PM_WAKEUP_LEVEL_HIGH
     },
+    {
+        ROW3_GPIO,
+        PM_WAKEUP_LEVEL_HIGH
+    },
+    {
+        ROW4_GPIO,
+        PM_WAKEUP_LEVEL_HIGH
+    },
 };
 
 static uint32_t pm_pin_num = sizeof(pin_PmCfg)/sizeof(drv_pm_pinCfg_t);

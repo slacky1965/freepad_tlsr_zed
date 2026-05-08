@@ -590,43 +590,34 @@ void button_clear_sleep() {
 
 void button_init() {
 
-    memset(&app_button, 0, sizeof(app_button_t));
+    uint8_t row_num = 4, line_num;
+    uint32_t key_row[] = KEY_ROW;
+    uint32_t key_line[] = KEY_LINE;
 
-    uint8_t row_num, line_num;
+    memset(&app_button, 0, sizeof(app_button_t));
 
     switch(device_model) {
         case DEVICE_BUTTON_8:
-            row_num = 2;
-            line_num = 4;
+            line_num = 2;
             break;
         case DEVICE_BUTTON_12:
-            row_num = 3;
-            line_num = 4;
+            line_num = 3;
             break;
         case DEVICE_BUTTON_20:
-            row_num = 4;
             line_num = 5;
             break;
         default:
-            row_num = 2;
-            line_num = 4;
+            line_num = 2;
             break;
     }
 
-
-    for (uint8_t ir = 0; ir < row_num; ir++) {
-        for (uint8_t il = 0; il < line_num; il++) {
-            if (ir == 0) app_button.button[app_button.key_num].row_gpio = ROW1_GPIO;
-            else if (ir == 1) app_button.button[app_button.key_num].row_gpio = ROW2_GPIO;
-            else if (ir == 2) app_button.button[app_button.key_num].row_gpio = ROW3_GPIO;
-            else app_button.button[app_button.key_num].row_gpio = ROW4_GPIO;
-            if (il == 0) app_button.button[app_button.key_num].line_gpio = LINE1_GPIO;
-            else if (il == 1) app_button.button[app_button.key_num].line_gpio = LINE2_GPIO;
-            else if (il == 2) app_button.button[app_button.key_num].line_gpio = LINE3_GPIO;
-            else if (il == 3) app_button.button[app_button.key_num].line_gpio = LINE4_GPIO;
-            else app_button.button[app_button.key_num].line_gpio = LINE5_GPIO;
+    for (uint8_t il = 0; il < line_num; il++) {
+        for (uint8_t ir = 0; ir < row_num; ir++) {
+            app_button.button[app_button.key_num].row_gpio = key_row[ir];
+            app_button.button[app_button.key_num].line_gpio = key_line[il];
             app_button.button[app_button.key_num].debounce = 1;
             app_button.button[app_button.key_num++].pressed_time = clock_time();
         }
     }
+
 }
