@@ -234,6 +234,7 @@ clean-project:
 	-$(RM) -R $(OUT_PATH)/$(SRC_PATH)/*.o
 	-$(RM) -R $(OUT_PATH)/$(SRC_PATH)/common/*.o
 	-$(RM) -R $(OUT_PATH)/$(SRC_PATH)/zcl/*.o
+	-$(RM) -R $(OUT_PATH)/$(SRC_PATH)/zdo/*.o
 	-$(RM) -R $(OUT_PATH)/$(SRC_PATH)/drv_sdk/*.o
 	-@echo ' '
 	
