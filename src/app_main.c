@@ -93,6 +93,55 @@ bdb_commissionSetting_t g_bdbCommissionSetting = {
  * FUNCTIONS
  */
 
+static void afApsAckCb(void *args) {
+
+    apsdeDataConf_t *pApsDataCnf = (apsdeDataConf_t *)args;
+    repeat_cmd_t *r_cmd = app_find_repeat_cmd(pApsDataCnf->clusterId,
+                                              pApsDataCnf->srcEndpoint,
+                                              pApsDataCnf->dstEndpoint,
+                                              pApsDataCnf->dstAddrMode,
+                                              (tl_zb_addr_t*)&pApsDataCnf->dstAddr);
+#if UART_PRINTF_MODE
+    DEBUG(DEBUG_REPEAT_EN, "afApsAckCb() - status: 0x%02x, clId: 0x%04x, src_ep: %d, dst_ep: %d, ",
+            pApsDataCnf->status, pApsDataCnf->clusterId, pApsDataCnf->srcEndpoint, pApsDataCnf->dstEndpoint);
+    if (pApsDataCnf->dstAddrMode == APS_SHORT_GROUPADDR_NOEP) {
+        APP_DEBUG(DEBUG_REPEAT_EN, "short_addr: 0x%04x, ", pApsDataCnf->dstAddr.addr_short);
+    } else {
+        DEBUG(DEBUG_REPEAT_EN, "ieee: 0x%02x%02x%02x%02x%02x%02x%02x%02x, ",
+                pApsDataCnf->dstAddr.addr_long[0], pApsDataCnf->dstAddr.addr_long[1],
+                pApsDataCnf->dstAddr.addr_long[2], pApsDataCnf->dstAddr.addr_long[3],
+                pApsDataCnf->dstAddr.addr_long[4], pApsDataCnf->dstAddr.addr_long[5],
+                pApsDataCnf->dstAddr.addr_long[6], pApsDataCnf->dstAddr.addr_long[7]);
+    }
+    DEBUG(DEBUG_REPEAT_EN, "r_cmd: %s\r\n", r_cmd?"true":"false");
+#endif
+
+    if (r_cmd) {
+        if (pApsDataCnf->status != APS_STATUS_SUCCESS) {
+            if (pApsDataCnf->dstAddrMode != APS_SHORT_GROUPADDR_NOEP) {
+                switch(pApsDataCnf->clusterId) {
+                    case ZCL_CLUSTER_GEN_ON_OFF:
+                        TL_ZB_TIMER_SCHEDULE(app_repeatCmdOnOff, r_cmd, TIMEOUT_250MS);
+                        break;
+                    case ZCL_CLUSTER_GEN_LEVEL_CONTROL:
+                        TL_ZB_TIMER_SCHEDULE(app_repeatCmdLevel, r_cmd, TIMEOUT_250MS);
+                        break;
+                    case ZCL_CLUSTER_GEN_SCENES:
+                        TL_ZB_TIMER_SCHEDULE(app_repeatCmdScene, r_cmd, TIMEOUT_250MS);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+        r_cmd->used = false;
+        if (repeat_cmd_num > 0) repeat_cmd_num--;
+    } else {
+        if (app_getTimeoutPollRate() < TIMEOUT_30SEC) app_setPollRate(TIMEOUT_30SEC, 1);
+    }
+    if (repeat_cmd_num == 0) clearButtonSleepTimer();
+}
+
 /*********************************************************************
  * @fn      stack_init
  *
@@ -135,29 +184,29 @@ void user_app_init(void)
     zcl_init(app_zclProcessIncomingMsg);
 
     /* register endPoint */
-    af_endpointRegister(APP_ENDPOINT1, (af_simple_descriptor_t *)&app_ep1Desc, zcl_rx_handler, NULL);
-    af_endpointRegister(APP_ENDPOINT2, (af_simple_descriptor_t *)&app_ep2Desc, zcl_rx_handler, NULL);
-    af_endpointRegister(APP_ENDPOINT3, (af_simple_descriptor_t *)&app_ep3Desc, zcl_rx_handler, NULL);
-    af_endpointRegister(APP_ENDPOINT4, (af_simple_descriptor_t *)&app_ep4Desc, zcl_rx_handler, NULL);
-    af_endpointRegister(APP_ENDPOINT5, (af_simple_descriptor_t *)&app_ep5Desc, zcl_rx_handler, NULL);
-    af_endpointRegister(APP_ENDPOINT6, (af_simple_descriptor_t *)&app_ep6Desc, zcl_rx_handler, NULL);
-    af_endpointRegister(APP_ENDPOINT7, (af_simple_descriptor_t *)&app_ep7Desc, zcl_rx_handler, NULL);
-    af_endpointRegister(APP_ENDPOINT8, (af_simple_descriptor_t *)&app_ep8Desc, zcl_rx_handler, NULL);
+    af_endpointRegister(APP_ENDPOINT1, (af_simple_descriptor_t *)&app_ep1Desc, zcl_rx_handler, afApsAckCb);
+    af_endpointRegister(APP_ENDPOINT2, (af_simple_descriptor_t *)&app_ep2Desc, zcl_rx_handler, afApsAckCb);
+    af_endpointRegister(APP_ENDPOINT3, (af_simple_descriptor_t *)&app_ep3Desc, zcl_rx_handler, afApsAckCb);
+    af_endpointRegister(APP_ENDPOINT4, (af_simple_descriptor_t *)&app_ep4Desc, zcl_rx_handler, afApsAckCb);
+    af_endpointRegister(APP_ENDPOINT5, (af_simple_descriptor_t *)&app_ep5Desc, zcl_rx_handler, afApsAckCb);
+    af_endpointRegister(APP_ENDPOINT6, (af_simple_descriptor_t *)&app_ep6Desc, zcl_rx_handler, afApsAckCb);
+    af_endpointRegister(APP_ENDPOINT7, (af_simple_descriptor_t *)&app_ep7Desc, zcl_rx_handler, afApsAckCb);
+    af_endpointRegister(APP_ENDPOINT8, (af_simple_descriptor_t *)&app_ep8Desc, zcl_rx_handler, afApsAckCb);
     if (device_model == DEVICE_BUTTON_12 || device_model == DEVICE_BUTTON_20) {
-        af_endpointRegister(APP_ENDPOINT9, (af_simple_descriptor_t *)&app_ep9Desc, zcl_rx_handler, NULL);
-        af_endpointRegister(APP_ENDPOINT10, (af_simple_descriptor_t *)&app_ep10Desc, zcl_rx_handler, NULL);
-        af_endpointRegister(APP_ENDPOINT11, (af_simple_descriptor_t *)&app_ep11Desc, zcl_rx_handler, NULL);
-        af_endpointRegister(APP_ENDPOINT12, (af_simple_descriptor_t *)&app_ep12Desc, zcl_rx_handler, NULL);
+        af_endpointRegister(APP_ENDPOINT9, (af_simple_descriptor_t *)&app_ep9Desc, zcl_rx_handler, afApsAckCb);
+        af_endpointRegister(APP_ENDPOINT10, (af_simple_descriptor_t *)&app_ep10Desc, zcl_rx_handler, afApsAckCb);
+        af_endpointRegister(APP_ENDPOINT11, (af_simple_descriptor_t *)&app_ep11Desc, zcl_rx_handler, afApsAckCb);
+        af_endpointRegister(APP_ENDPOINT12, (af_simple_descriptor_t *)&app_ep12Desc, zcl_rx_handler, afApsAckCb);
     }
     if (device_model == DEVICE_BUTTON_20) {
-        af_endpointRegister(APP_ENDPOINT13, (af_simple_descriptor_t *)&app_ep13Desc, zcl_rx_handler, NULL);
-        af_endpointRegister(APP_ENDPOINT14, (af_simple_descriptor_t *)&app_ep14Desc, zcl_rx_handler, NULL);
-        af_endpointRegister(APP_ENDPOINT15, (af_simple_descriptor_t *)&app_ep15Desc, zcl_rx_handler, NULL);
-        af_endpointRegister(APP_ENDPOINT16, (af_simple_descriptor_t *)&app_ep16Desc, zcl_rx_handler, NULL);
-        af_endpointRegister(APP_ENDPOINT17, (af_simple_descriptor_t *)&app_ep17Desc, zcl_rx_handler, NULL);
-        af_endpointRegister(APP_ENDPOINT18, (af_simple_descriptor_t *)&app_ep18Desc, zcl_rx_handler, NULL);
-        af_endpointRegister(APP_ENDPOINT19, (af_simple_descriptor_t *)&app_ep19Desc, zcl_rx_handler, NULL);
-        af_endpointRegister(APP_ENDPOINT20, (af_simple_descriptor_t *)&app_ep20Desc, zcl_rx_handler, NULL);
+        af_endpointRegister(APP_ENDPOINT13, (af_simple_descriptor_t *)&app_ep13Desc, zcl_rx_handler, afApsAckCb);
+        af_endpointRegister(APP_ENDPOINT14, (af_simple_descriptor_t *)&app_ep14Desc, zcl_rx_handler, afApsAckCb);
+        af_endpointRegister(APP_ENDPOINT15, (af_simple_descriptor_t *)&app_ep15Desc, zcl_rx_handler, afApsAckCb);
+        af_endpointRegister(APP_ENDPOINT16, (af_simple_descriptor_t *)&app_ep16Desc, zcl_rx_handler, afApsAckCb);
+        af_endpointRegister(APP_ENDPOINT17, (af_simple_descriptor_t *)&app_ep17Desc, zcl_rx_handler, afApsAckCb);
+        af_endpointRegister(APP_ENDPOINT18, (af_simple_descriptor_t *)&app_ep18Desc, zcl_rx_handler, afApsAckCb);
+        af_endpointRegister(APP_ENDPOINT19, (af_simple_descriptor_t *)&app_ep19Desc, zcl_rx_handler, afApsAckCb);
+        af_endpointRegister(APP_ENDPOINT20, (af_simple_descriptor_t *)&app_ep20Desc, zcl_rx_handler, afApsAckCb);
     }
 
     zcl_reportingTabInit();
@@ -213,10 +262,11 @@ void app_task(void) {
     button_handler();
 
     if(bdb_isIdle()) {
-        report_handler();
+//        report_handler();
 #if PM_ENABLE
         button_handler();
         if(!button_idle() && !factory_reset) {
+//            printf("test\r\n");
             app_lowPowerEnter();
         }
 #endif
@@ -295,45 +345,17 @@ void user_init(bool isRetention) {
         /* Set default reporting configuration */
         uint8_t reportableChange = 0x00;
         bdb_defaultReportingCfg(APP_ENDPOINT1, HA_PROFILE_ID, ZCL_CLUSTER_GEN_POWER_CFG,
-                ZCL_ATTRID_BATTERY_VOLTAGE, REPORTING_BATTERY_MIN, REPORTING_BATTERY_MAX, (uint8_t *)&reportableChange);
-        bdb_defaultReportingCfg(APP_ENDPOINT1, HA_PROFILE_ID, ZCL_CLUSTER_GEN_POWER_CFG,
-                ZCL_ATTRID_BATTERY_PERCENTAGE_REMAINING, REPORTING_BATTERY_MIN, REPORTING_BATTERY_MAX, (uint8_t *)&reportableChange);
-
-//        /* MultistateInput */
-//        uint16_t reportableChange_u16 = 0x01;
-//        bdb_defaultReportingCfg(APP_ENDPOINT1, HA_PROFILE_ID, ZCL_CLUSTER_GEN_MULTISTATE_INPUT_BASIC,
-//                ZCL_MULTISTATE_INPUT_ATTRID_PRESENT_VALUE, 10, 0, (uint8_t *)&reportableChange_u16);
-//        bdb_defaultReportingCfg(APP_ENDPOINT2, HA_PROFILE_ID, ZCL_CLUSTER_GEN_MULTISTATE_INPUT_BASIC,
-//                ZCL_MULTISTATE_INPUT_ATTRID_PRESENT_VALUE, 10, 0, (uint8_t *)&reportableChange_u16);
-//        bdb_defaultReportingCfg(APP_ENDPOINT3, HA_PROFILE_ID, ZCL_CLUSTER_GEN_MULTISTATE_INPUT_BASIC,
-//                ZCL_MULTISTATE_INPUT_ATTRID_PRESENT_VALUE, 10, 0, (uint8_t *)&reportableChange_u16);
-//        bdb_defaultReportingCfg(APP_ENDPOINT4, HA_PROFILE_ID, ZCL_CLUSTER_GEN_MULTISTATE_INPUT_BASIC,
-//                ZCL_MULTISTATE_INPUT_ATTRID_PRESENT_VALUE, 10, 0, (uint8_t *)&reportableChange_u16);
-//        bdb_defaultReportingCfg(APP_ENDPOINT5, HA_PROFILE_ID, ZCL_CLUSTER_GEN_MULTISTATE_INPUT_BASIC,
-//                ZCL_MULTISTATE_INPUT_ATTRID_PRESENT_VALUE, 10, 0, (uint8_t *)&reportableChange_u16);
-//        bdb_defaultReportingCfg(APP_ENDPOINT6, HA_PROFILE_ID, ZCL_CLUSTER_GEN_MULTISTATE_INPUT_BASIC,
-//                ZCL_MULTISTATE_INPUT_ATTRID_PRESENT_VALUE, 10, 0, (uint8_t *)&reportableChange_u16);
-
+                                ZCL_ATTRID_BATTERY_PERCENTAGE_REMAINING, REPORTING_BATTERY_MIN,
+                                REPORTING_BATTERY_MAX, (uint8_t *)&reportableChange);
 
         /* Initialize BDB */
         uint8_t repower = drv_pm_deepSleep_flag_get() ? 0 : 1;
         bdb_init((af_simple_descriptor_t *)&app_ep1Desc, &g_bdbCommissionSetting, &g_zbBdbCb, repower);
 
-//        app_setPollRate(TIMEOUT_15SEC);
-
-//        if (zb_getLocalShortAddr() < 0xFFF8) {
-//            app_setPollRate(TIMEOUT_2MIN);
-//            if(!zb_isDeviceJoinedNwk()) {
-//                zb_rejoinReq(zb_apsChannelMaskGet(), g_bdbAttrs.scanDuration);
-//            }
-//        }
 
     }else{
         /* Re-config phy when system recovery from deep sleep with retention */
         mac_phyReconfig();
-//        if (zb_getLocalShortAddr() < 0xFFF8 && !g_appCtx.timerSetPollRateEvt && !g_appCtx.ota) {
-//            app_setPollRate(TIMEOUT_5SEC);
-//        }
     }
 
     ZB_RADIO_TX_POWER_SET(ZB_APP_TX_POWER_IDX);

@@ -276,7 +276,7 @@ static void app_zclDfltRspCmd(uint16_t clusterId, zclDefaultRspCmd_t *pDftRspCmd
  */
 static void app_zclCfgReportCmd(uint8_t endPoint, uint16_t clusterId, zclCfgReportCmd_t *pCfgReportCmd)
 {
-APP_DEBUG(DEBUG_ZCL_CB_EN, "app_zclCfgReportCmd\r\n");
+    APP_DEBUG(DEBUG_ZCL_CB_EN, "app_zclCfgReportCmd\r\n");
 //    reportCfgInfo_t *pEntry = NULL;
 //    for (u8 i = 0; i < ZCL_REPORTING_TABLE_NUM; i++) {
 //        pEntry = &reportingTab.reportCfgInfo[i];
@@ -300,7 +300,7 @@ APP_DEBUG(DEBUG_ZCL_CB_EN, "app_zclCfgReportCmd\r\n");
         }
     }
 
-    app_setPollRate(TIMEOUT_1MIN);
+    app_setPollRate(TIMEOUT_2MIN, 1);
 }
 
 /*********************************************************************

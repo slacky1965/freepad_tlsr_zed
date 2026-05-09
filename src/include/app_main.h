@@ -6,6 +6,7 @@
 #include "general/zcl_multistate_input.h"
 #include "bdb.h"
 #include "ota.h"
+#include "app_cfg.h"
 
 #include "zcl_onoffSwitchCfg.h"
 #include "zcl_custom_attr.h"
@@ -16,6 +17,7 @@
 #include "app_pm.h"
 #include "app_battery.h"
 #include "app_reporting.h"
+#include "app_repeat_cmd.h"
 #include "app_endpoint_cfg.h"
 #include "app_utility.h"
 #include "app_on_off.h"

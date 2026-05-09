@@ -57,7 +57,7 @@
  */
 
 #define ZCL_BASIC_MFG_NAME     {10,'S','l','a','c','k','y','-','D','I','Y'}
-#define ZCL_BASIC_MODEL_ID     {12,'T','S','0','0','4','1','-','z','-','S','l','D'}
+#define ZCL_BASIC_MODEL_ID     {15,'F','r','e','e','P','a','d','-','0','8','K','-','S','l','D'}
 
 /**********************************************************************
  * Version configuration
@@ -80,7 +80,8 @@
 #define DEBUG_LEVEL_EN                  ON
 #define DEBUG_SCENE_EN                  ON
 #define DEBUG_ZCL_CB_EN                 OFF
-#define DEBUG_ZB_CB_EN                  OFF
+#define DEBUG_ZB_CB_EN                  ON
+#define DEBUG_REPEAT_EN                 ON
 
 /* PM */
 #define PM_ENABLE						ON

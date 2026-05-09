@@ -57,9 +57,9 @@ static int32_t set_pollRateCb(void *args) {
     return -1;
 }
 
-void app_setPollRate(uint32_t sec) {
+void app_setPollRate(uint32_t ms, uint8_t poll_rate) {
 
-    APP_DEBUG(UART_PRINTF_MODE, "app_setPollRate(). sec: %d\r\n", sec);
+//    APP_DEBUG(UART_PRINTF_MODE, "app_setPollRate(). sec: %d\r\n", ms/1000);
 
     g_appCtx.not_sleep = true;
 
@@ -70,14 +70,21 @@ void app_setPollRate(uint32_t sec) {
         return;
     }
 
-    zb_setPollRate(POLL_RATE * 3);
+    zb_setPollRate(POLL_RATE * poll_rate);
 
     if (g_appCtx.timerSetPollRateEvt) {
         TL_ZB_TIMER_CANCEL(&g_appCtx.timerSetPollRateEvt);
     }
-    g_appCtx.timerSetPollRateEvt = TL_ZB_TIMER_SCHEDULE(set_pollRateCb, NULL, sec);
+    g_appCtx.timerSetPollRateEvt = TL_ZB_TIMER_SCHEDULE(set_pollRateCb, NULL, ms);
 
 }
+
+uint32_t app_getTimeoutPollRate() {
+    if (g_appCtx.timerSetPollRateEvt) return g_appCtx.timerSetPollRateEvt->timeout;
+
+    return 0;
+}
+
 
 int32_t net_steer_start_offCb(void *args) {
 
