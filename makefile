@@ -30,7 +30,7 @@ LINUX_OS = GNU/Linux
 ifeq ($(COMPILE_OS),$(LINUX_OS))	
 	COMPILE_PREFIX = /opt/tc32/bin/tc32
 else
-	COMPILE_PREFIX = C:/TelinkSDK/opt/tc32/bin/tc32
+	COMPILE_PREFIX = C:/TelinkIoTStudio/opt/tc32/bin/tc32
 endif
 
 AS      = $(COMPILE_PREFIX)-elf-as
