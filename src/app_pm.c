@@ -1,6 +1,11 @@
 #include "app_main.h"
 
-#define DEBUG_PM_LOCAL_EN 1 // DEBUG_PM_EN
+#define DEBUG_PM_LOCAL_EN       1 // DEBUG_PM_EN
+#define POLL_RATE_LONG_SLEEP    5000
+
+#if UART_PRINTF_MODE
+static uint32_t time_point = 0;
+#endif
 
 #if PM_ENABLE
 /**
@@ -71,7 +76,7 @@ static void app_drv_pm_lowPowerEnter(void) {
         }
     }
 
-    APP_DEBUG(DEBUG_PM_EN, "Not long deep sleep start with time: %d ms\r\n", sleepTime);
+    DEBUG(DEBUG_PM_EN, "Not long deep sleep start with time: %d ms\r\n", sleepTime);
 
 #if defined(MCU_CORE_826x)
     drv_pm_sleep_mode_e sleepMode = (wakeupSrc & PM_WAKEUP_SRC_TIMER) ? PM_SLEEP_MODE_SUSPEND : PM_SLEEP_MODE_DEEPSLEEP;
@@ -110,10 +115,19 @@ void app_lowPowerEnter() {
 #if DEBUG_PM_EN
         app_drv_pm_lowPowerEnter();
 #else
+#if UART_PRINTF_MODE
+        if (clock_time_exceed(time_point, TIMEOUT_TICK_1SEC)) {
+            APP_DEBUG(UART_PRINTF_MODE, ".");
+            time_point = clock_time();
+        }
+#endif
         drv_pm_lowPowerEnter();
 #endif
     } else /*if (zb_isDeviceJoinedNwk())*/{
         /* app deep sleep with SRAM retention */
+
+        if (zb_getPollRate() != POLL_RATE_LONG_SLEEP) zb_setPollRate(POLL_RATE_LONG_SLEEP);
+
         if (tl_stackBusy() || !zb_isTaskDone()) {
             APP_DEBUG(DEBUG_PM_EN, "Stack or Task busy. Return from deep sleep start\r\n");
             return;
@@ -128,7 +142,7 @@ void app_lowPowerEnter() {
 
         durationMs = g_appCtx.timerBatteryEvt->timeout /*TIME_LONG_DEEP_SLEEP * 1000*/;
 
-        APP_DEBUG(DEBUG_PM_LOCAL_EN, "Long deep sleep start with time: %d sec\r\n", durationMs / 1000);
+        DEBUG(DEBUG_PM_LOCAL_EN, "Long deep sleep start with time: %d sec\r\n", durationMs / 1000);
 
         drv_pm_longSleep(PM_SLEEP_MODE_DEEP_WITH_RETENTION, PM_WAKEUP_SRC_PAD | PM_WAKEUP_SRC_TIMER, durationMs);
 

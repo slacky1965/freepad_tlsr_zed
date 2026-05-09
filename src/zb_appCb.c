@@ -125,7 +125,7 @@ static s32 app_rejoinBackoff(void *arg)
  */
 void zb_bdbInitCb(u8 status, u8 joinedNetwork)
 {
-    APP_DEBUG(DEBUG_ZB_CB_EN, "bdbInitCb: sta = %x, joined = %x\n", status, joinedNetwork);
+    APP_DEBUG(DEBUG_ZB_CB_EN, "bdbInitCb: sta = %x, joined = %x\r\n", status, joinedNetwork);
 
     if (status == BDB_INIT_STATUS_SUCCESS) {
         /*
@@ -138,7 +138,7 @@ void zb_bdbInitCb(u8 status, u8 joinedNetwork)
          */
         if (joinedNetwork) {
             g_appCtx.net_steer_start = false;
-            app_setPollRate(TIMEOUT_1MIN);
+            app_setPollRate(TIMEOUT_40SEC, 5);
 
 #ifdef ZCL_OTA
             ota_queryStart(APP_OTA_PERIODIC_QUERY_INTERVAL);
@@ -181,7 +181,7 @@ void zb_bdbInitCb(u8 status, u8 joinedNetwork)
  */
 void zb_bdbCommissioningCb(u8 status, void *arg)
 {
-    APP_DEBUG(DEBUG_ZB_CB_EN, "bdbCommCb: sta = %x\n", status);
+    APP_DEBUG(DEBUG_ZB_CB_EN, "bdbCommCb: sta = %x\r\n", status);
 
     switch (status) {
     case BDB_COMMISSION_STA_SUCCESS:
@@ -189,7 +189,7 @@ void zb_bdbCommissioningCb(u8 status, void *arg)
         light_blink_stop();
         light_blink_start(1, 3000, 10);
 
-        app_setPollRate(TIMEOUT_1MIN);
+        app_setPollRate(TIMEOUT_1MIN, 3);
 
         if (steerTimerEvt) {
             TL_ZB_TIMER_CANCEL(&steerTimerEvt);
@@ -296,7 +296,7 @@ void zb_bdbFindBindSuccessCb(findBindDst_t *pDstInfo)
 #ifdef ZCL_OTA
 void app_otaProcessMsgHandler(u8 evt, u8 status)
 {
-    APP_DEBUG(DEBUG_ZB_CB_EN, "app_otaProcessMsgHandler: status = %x\n", status);
+    APP_DEBUG(DEBUG_ZB_CB_EN, "app_otaProcessMsgHandler: status = %x\r\n", status);
     if (evt == OTA_EVT_START) {
         if (status == ZCL_STA_SUCCESS) {
             APP_DEBUG(DEBUG_OTA_EN, "OTA update start.\r\n");
@@ -312,7 +312,7 @@ void app_otaProcessMsgHandler(u8 evt, u8 status)
 
         }
     } else if (evt == OTA_EVT_COMPLETE) {
-        app_setPollRate(TIMEOUT_20SEC);
+        app_setPollRate(TIMEOUT_20SEC, 3);
 
         if (status == ZCL_STA_SUCCESS) {
             APP_DEBUG(DEBUG_OTA_EN, "OTA update successful.\r\n");
@@ -322,7 +322,7 @@ void app_otaProcessMsgHandler(u8 evt, u8 status)
             ota_queryStart(OTA_PERIODIC_QUERY_INTERVAL);
         }
     } else if (evt == OTA_EVT_IMAGE_DONE) {
-        app_setPollRate(TIMEOUT_20SEC);
+        app_setPollRate(TIMEOUT_20SEC, 3);
     }
 }
 #endif

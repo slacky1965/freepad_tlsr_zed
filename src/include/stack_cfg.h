@@ -74,7 +74,7 @@
 /**
  *  @brief  APS: MAX number of binding table size
  */
-#define APS_BINDING_TABLE_NUM                 	96
+#define APS_BINDING_TABLE_NUM                 	128
 
 
 /**********************************************************************

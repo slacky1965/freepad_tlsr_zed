@@ -6,8 +6,8 @@
 #endif
 
 typedef enum {
-    DEVICE_BUTTON_8 = 0,    /* 2x4 - 8 keys  */
-    DEVICE_BUTTON_12,       /* 3x4 - 12 keys */
+    DEVICE_BUTTON_8 = 0,    /* 4x2 - 8 keys  */
+    DEVICE_BUTTON_12,       /* 4x3 - 12 keys */
     DEVICE_BUTTON_20,       /* 4x5 - 20 keys */
     DEVICE_BUTTON_MAX
 } device_model_t;
@@ -18,15 +18,19 @@ typedef struct __attribute__((packed)) {
      * 0x00 - toggle
      * 0x01 - momentary
      * 0x02 - multifunction
-     * 0x03 - level up
-     * 0x04 - level down
-     * 0x05 - scene
+     * 0x03 - level up/down
+     * 0x04 - level up
+     * 0x05 - level down
+     * 0x06 - scene
      */
-    uint8_t switchType[MAX_BUTTON_NUM];
-    uint8_t switchActions[MAX_BUTTON_NUM];
-    uint8_t defaultMoveRate[MAX_BUTTON_NUM];
+    uint8_t     switchType[MAX_BUTTON_NUM];
+    uint8_t     switchActions[MAX_BUTTON_NUM];
+    uint8_t     levelMin[MAX_BUTTON_NUM];
+    uint8_t     levelMax[MAX_BUTTON_NUM];
+    uint8_t     defaultMoveRate[MAX_BUTTON_NUM];
+    uint16_t    transitionTime[MAX_BUTTON_NUM];
     app_scene_t scene[MAX_BUTTON_NUM];
-    uint8_t crc;
+    uint8_t     crc;
 } device_settings_t;
 
 extern device_model_t device_model;

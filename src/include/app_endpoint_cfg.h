@@ -103,6 +103,7 @@ typedef struct {
     uint8_t     maxLevel;
     uint8_t     options;
     uint8_t     defaultMoveRate;
+    uint16_t    transitionTime;
 } zcl_levelAttr_t;
 
 
