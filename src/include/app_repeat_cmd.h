@@ -12,9 +12,11 @@ typedef struct {
     uint8_t         dstAddrMode;
     tl_zb_addr_t    dstAddr;
     moveToLvl_t     move2Level;
-    move_t          move;
-    stop_t          stop;
-    step_t          step;
+    move_t          level_move;
+    stop_t          level_stop;
+    step_t          level_step;
+    colorCtrlMove2CTCmd_t move2ColorTemp;
+    colorCtrlStopCmd_t    stopMoveStep;
     recallScene_t   recallScene;
 } repeat_cmd_t;
 

@@ -87,13 +87,24 @@ bool app_add_repeat_cmd(uint16_t clId, uint8_t srcEp, uint8_t dstEp, uint8_t add
                             break;
                         case ZCL_CMD_LEVEL_MOVE_WITH_ON_OFF:
                         case ZCL_CMD_LEVEL_MOVE:
-                            memcpy(&repeat_cmd[i].move, (move_t*)args, sizeof(move_t));
+                            memcpy(&repeat_cmd[i].level_move, (move_t*)args, sizeof(move_t));
                             break;
                         case ZCL_CMD_LEVEL_STOP:
-                            memcpy(&repeat_cmd[i].stop, (stop_t*)args, sizeof(stop_t));
+                            memcpy(&repeat_cmd[i].level_stop, (stop_t*)args, sizeof(stop_t));
                             break;
                         case ZCL_CMD_LEVEL_STEP:
-                            memcpy(&repeat_cmd[i].step, (step_t*)args, sizeof(step_t));
+                            memcpy(&repeat_cmd[i].level_step, (step_t*)args, sizeof(step_t));
+                            break;
+                        default:
+                            break;
+                    }
+                } else if (clId == ZCL_CLUSTER_LIGHTING_COLOR_CONTROL) {
+                    switch(cmdId) {
+                        case ZCL_CMD_LIGHT_COLOR_CONTROL_MOVE_TO_COLOR_TEMPERATURE:
+                            memcpy(&repeat_cmd[i].move2ColorTemp, (colorCtrlMove2CTCmd_t*)args, sizeof(colorCtrlMove2CTCmd_t));
+                            break;
+                        case ZCL_CMD_LIGHT_COLOR_CONTROL_STOP_MOVE_STEP:
+                            memcpy(&repeat_cmd[i].stopMoveStep, (colorCtrlStopCmd_t*)args, sizeof(colorCtrlStopCmd_t));
                             break;
                         default:
                             break;
