@@ -85,6 +85,7 @@ int32_t app_repeatCmdScene(void *args) {
         memcpy(dstEpInfo.dstAddr.extAddr, r_cmd->dstAddr.extAddr, sizeof(extAddr_t));
     }
     zcl_scene_recallSceneCmd(r_cmd->srcEp, &dstEpInfo, TRUE, &r_cmd->recallScene);
+//    if (repeat_cmd_num > 0) repeat_cmd_num--;
 
     return -1;
 }

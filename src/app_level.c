@@ -362,6 +362,7 @@ int32_t app_repeatCmdLevel(void *args) {
         default:
             break;
     }
+//    if (repeat_cmd_num > 0) repeat_cmd_num--;
 
     return -1;
 }

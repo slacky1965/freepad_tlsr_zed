@@ -121,16 +121,20 @@ static void afApsAckCb(void *args) {
             if (pApsDataCnf->dstAddrMode != APS_SHORT_GROUPADDR_NOEP) {
                 switch(pApsDataCnf->clusterId) {
                     case ZCL_CLUSTER_GEN_ON_OFF:
-                        TL_ZB_TIMER_SCHEDULE(app_repeatCmdOnOff, r_cmd, TIMEOUT_250MS);
+                        app_repeatCmdOnOff(r_cmd);
+//                        TL_ZB_TIMER_SCHEDULE(app_repeatCmdOnOff, r_cmd, TIMEOUT_250MS);
                         break;
                     case ZCL_CLUSTER_GEN_LEVEL_CONTROL:
-                        TL_ZB_TIMER_SCHEDULE(app_repeatCmdLevel, r_cmd, TIMEOUT_250MS);
+                        app_repeatCmdLevel(r_cmd);
+//                        TL_ZB_TIMER_SCHEDULE(app_repeatCmdLevel, r_cmd, TIMEOUT_250MS);
                         break;
                     case ZCL_CLUSTER_GEN_SCENES:
-                        TL_ZB_TIMER_SCHEDULE(app_repeatCmdScene, r_cmd, TIMEOUT_250MS);
+                        app_repeatCmdScene(r_cmd);
+//                        TL_ZB_TIMER_SCHEDULE(app_repeatCmdScene, r_cmd, TIMEOUT_250MS);
                         break;
                     case ZCL_CLUSTER_LIGHTING_COLOR_CONTROL:
-                        TL_ZB_TIMER_SCHEDULE(app_repeatCmdColorCtrl, r_cmd, TIMEOUT_250MS);
+                        app_repeatCmdColorCtrl(r_cmd);
+//                        TL_ZB_TIMER_SCHEDULE(app_repeatCmdColorCtrl, r_cmd, TIMEOUT_250MS);
                         break;
                     default:
                         break;
@@ -139,8 +143,8 @@ static void afApsAckCb(void *args) {
         }
         r_cmd->used = false;
         if (repeat_cmd_num > 0) repeat_cmd_num--;
-    } else {
-        if (app_getTimeoutPollRate() < TIMEOUT_30SEC) app_setPollRate(TIMEOUT_30SEC, 1);
+//    } else {
+//        if (pApsDataCnf->status == APS_STATUS_SUCCESS && app_getTimeoutPollRate() < TIMEOUT_30SEC) app_setPollRate(TIMEOUT_30SEC, 1);
     }
     if (repeat_cmd_num == 0) clearButtonSleepTimer();
 }

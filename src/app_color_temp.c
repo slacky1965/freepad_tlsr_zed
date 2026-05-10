@@ -1,114 +1,5 @@
 #include "app_main.h"
 
-typedef struct {
-    uint16_t step_color_temp[STEP_COLOR_NUM];
-    uint8_t  idx;
-    uint8_t  dir;
-} app_step_color_temp_t;
-
-app_step_color_temp_t app_step_color_temp[MAX_BUTTON_NUM] = {
-    {
-        .step_color_temp = STEP_COLOR_TEMP,
-        .idx = 0,
-        .dir = COLOR_MOVE_UP,
-    },
-    {
-        .step_color_temp = STEP_COLOR_TEMP,
-        .idx = 0,
-        .dir = COLOR_MOVE_UP,
-    },
-    {
-        .step_color_temp = STEP_COLOR_TEMP,
-        .idx = 0,
-        .dir = COLOR_MOVE_UP,
-    },
-    {
-        .step_color_temp = STEP_COLOR_TEMP,
-        .idx = 0,
-        .dir = COLOR_MOVE_UP,
-    },
-    {
-        .step_color_temp = STEP_COLOR_TEMP,
-        .idx = 0,
-        .dir = COLOR_MOVE_UP,
-    },
-    {
-        .step_color_temp = STEP_COLOR_TEMP,
-        .idx = 0,
-        .dir = COLOR_MOVE_UP,
-    },
-    {
-        .step_color_temp = STEP_COLOR_TEMP,
-        .idx = 0,
-        .dir = COLOR_MOVE_UP,
-    },
-    {
-        .step_color_temp = STEP_COLOR_TEMP,
-        .idx = 0,
-        .dir = COLOR_MOVE_UP,
-    },
-    {
-        .step_color_temp = STEP_COLOR_TEMP,
-        .idx = 0,
-        .dir = COLOR_MOVE_UP,
-    },
-    {
-        .step_color_temp = STEP_COLOR_TEMP,
-        .idx = 0,
-        .dir = COLOR_MOVE_UP,
-    },
-    {
-        .step_color_temp = STEP_COLOR_TEMP,
-        .idx = 0,
-        .dir = COLOR_MOVE_UP,
-    },
-    {
-        .step_color_temp = STEP_COLOR_TEMP,
-        .idx = 0,
-        .dir = COLOR_MOVE_UP,
-    },
-    {
-        .step_color_temp = STEP_COLOR_TEMP,
-        .idx = 0,
-        .dir = COLOR_MOVE_UP,
-   },
-    {
-        .step_color_temp = STEP_COLOR_TEMP,
-        .idx = 0,
-        .dir = COLOR_MOVE_UP,
-    },
-    {
-        .step_color_temp = STEP_COLOR_TEMP,
-        .idx = 0,
-        .dir = COLOR_MOVE_UP,
-    },
-    {
-        .step_color_temp = STEP_COLOR_TEMP,
-        .idx = 0,
-        .dir = COLOR_MOVE_UP,
-    },
-    {
-        .step_color_temp = STEP_COLOR_TEMP,
-        .idx = 0,
-        .dir = COLOR_MOVE_UP,
-   },
-    {
-        .step_color_temp = STEP_COLOR_TEMP,
-        .idx = 0,
-        .dir = COLOR_MOVE_UP,
-    },
-    {
-        .step_color_temp = STEP_COLOR_TEMP,
-        .idx = 0,
-        .dir = COLOR_MOVE_UP,
-    },
-    {
-        .step_color_temp = STEP_COLOR_TEMP,
-        .idx = 0,
-        .dir = COLOR_MOVE_UP,
-    },
-};
-
 static status_t st = 0xFF;
 
 void app_color_move_to_temp(uint8_t ep, uint8_t up_down) {
@@ -120,8 +11,6 @@ void app_color_move_to_temp(uint8_t ep, uint8_t up_down) {
     move2ColorTemp.optPresent = 0;
 
     uint8_t dstEp = 0;
-
-    app_step_color_temp[ep-1].dir = up_down;
 
     TL_SETSTRUCTCONTENT(dstEpInfo, 0);
     dstEpInfo.profileId = HA_PROFILE_ID;
@@ -280,7 +169,7 @@ void app_color_step_temp(uint8_t ep, uint8_t up_down) {
     epInfo_t dstEpInfo;
     colorCtrlStepCTCmd_t step;
     step.stepMode = up_down?COLOR_CTRL_STEP_MODE_DOWN:COLOR_CTRL_STEP_MODE_UP;
-    step.stepSize = 100;
+    step.stepSize = 87;
     step.transitionTime = 1;
     step.optPresent = 0;
     step.colorTempMinMireds = COLOR_TEMPERATURE_COOLEST;
@@ -302,105 +191,8 @@ void app_color_step_temp(uint8_t ep, uint8_t up_down) {
         if (grEntry) {
             dstEpInfo.dstAddr.shortAddr = grEntry->group_addr;
             st = zcl_lightColorCtrl_stepColorTemperatureCmd(ep, &dstEpInfo, TRUE, &step);
-            APP_DEBUG(DEBUG_LEVEL_EN, "Color step %s for bind with size: %d, src_ep: %d, dst_ep: %d, addr: 0x%04x, status: %d\r\n",
+            APP_DEBUG(DEBUG_COLOR_CTRL_EN, "Color step %s for bind with size: %d, src_ep: %d, dst_ep: %d, addr: 0x%04x, status: %d\r\n",
                     up_down?"Down":"Up", step.stepSize, ep, grEntry->n_endpoints, grEntry->group_addr, st);
-        }
-    }
-
-    /* command when binding */
-    TL_SETSTRUCTCONTENT(dstEpInfo, 0);
-    dstEpInfo.profileId = HA_PROFILE_ID;
-//    dstEpInfo.dstAddrMode = APS_DSTADDR_EP_NOTPRESETNT;
-//    dstEpInfo.dstAddrMode = APS_LONG_DSTADDR_WITHEP;
-
-    aps_binding_entry_t *bind_tbl = bindTblEntryGet();
-    for (uint8_t j = 0; j < APS_BINDING_TABLE_NUM; j++) {
-        if (bind_tbl->used && bind_tbl->clusterId == ZCL_CLUSTER_LIGHTING_COLOR_CONTROL && bind_tbl->srcEp == ep) {
-            dstEpInfo.dstAddrMode = bind_tbl->dstAddrMode;
-            if (dstEpInfo.dstAddrMode == APS_SHORT_GROUPADDR_NOEP) {
-                dstEpInfo.txOptions = 0;
-                dstEpInfo.dstAddr.shortAddr = bind_tbl->groupAddr;
-            } else {
-                dstEpInfo.txOptions = APS_TX_OPT_ACK_TX;
-                dstEpInfo.dstAddrMode = APS_LONG_DSTADDR_WITHEP;
-                dstEpInfo.dstEp = bind_tbl->dstExtAddrInfo.dstEp;
-                memcpy(dstEpInfo.dstAddr.extAddr, bind_tbl->dstExtAddrInfo.extAddr, sizeof(extAddr_t));
-                dstEp = bind_tbl->dstExtAddrInfo.dstEp;
-            }
-            app_add_repeat_cmd(ZCL_CLUSTER_LIGHTING_COLOR_CONTROL, ep, dstEp, dstEpInfo.dstAddrMode, dstEpInfo.dstAddr, ZCL_CMD_LIGHT_COLOR_CONTROL_STEP_COLOR_TEMPERATURE, &step);
-            st = zcl_lightColorCtrl_stepColorTemperatureCmd(ep, &dstEpInfo, TRUE, &step);
-#if DEBUG_LEVEL_EN
-            APP_DEBUG(DEBUG_LEVEL_EN, "Color step %s for bind with size: %d, ep: %d, clId: 0x%04x, addrMode: %d - %s, ",
-                    up_down?"Down":"Up", step.stepSize, bind_tbl->srcEp, bind_tbl->clusterId, dstEpInfo.dstAddrMode,
-                    (dstEpInfo.dstAddrMode == APS_DSTADDR_EP_NOTPRESETNT)?"APS_DSTADDR_EP_NOTPRESETNT":
-                    (dstEpInfo.dstAddrMode == APS_SHORT_GROUPADDR_NOEP)?"APS_SHORT_GROUPADDR_NOEP":
-                    (dstEpInfo.dstAddrMode == APS_SHORT_DSTADDR_WITHEP)?"APS_SHORT_DSTADDR_WITHEP":"APS_LONG_DSTADDR_WITHEP");
-            if (dstEpInfo.dstAddrMode == APS_LONG_DSTADDR_WITHEP) {
-                APP_DEBUG(DEBUG_LEVEL_EN, "ieee: 0x%02x%02x%02x%02x%02x%02x%02x%02x, ",
-                        bind_tbl->dstExtAddrInfo.extAddr[0], bind_tbl->dstExtAddrInfo.extAddr[1],
-                        bind_tbl->dstExtAddrInfo.extAddr[2], bind_tbl->dstExtAddrInfo.extAddr[3],
-                        bind_tbl->dstExtAddrInfo.extAddr[4], bind_tbl->dstExtAddrInfo.extAddr[5],
-                        bind_tbl->dstExtAddrInfo.extAddr[6], bind_tbl->dstExtAddrInfo.extAddr[7]);
-            } else if (dstEpInfo.dstAddrMode == APS_SHORT_GROUPADDR_NOEP) {
-                APP_DEBUG(DEBUG_LEVEL_EN, "groupAddr: 0x%04x, ",
-                        dstEpInfo.dstAddr.shortAddr);
-            } else {
-                APP_DEBUG(DEBUG_LEVEL_EN, "shortAddr: 0x%04x, ",
-                        dstEpInfo.dstAddr.shortAddr);
-            }
-            APP_DEBUG(DEBUG_LEVEL_EN, "status: 0x%02x\r\n", st);
-#endif
-        }
-        bind_tbl++;
-    }
-}
-
-void app_color_step_temp_one_key(uint8_t ep, uint8_t up_down) {
-    epInfo_t dstEpInfo;
-
-    colorCtrlMove2CTCmd_t move2ColorTemp;
-    move2ColorTemp.transitionTime = 0;
-    move2ColorTemp.optPresent = 0;
-
-    uint8_t dstEp = 0;
-    uint8_t idx = ep-1;
-
-    if (up_down == COLOR_MOVE_ALTERNATE) {
-        if (app_step_color_temp[idx].dir == COLOR_MOVE_UP) {
-            if (app_step_color_temp[idx].idx != (STEP_COLOR_NUM - 1)) {
-                app_step_color_temp[idx].idx++;
-            } else {
-                app_step_color_temp[idx].dir = COLOR_MOVE_DOWN;
-                app_step_color_temp[idx].idx--;
-            }
-        } else {
-            if (app_step_color_temp[idx].idx != 0) {
-                app_step_color_temp[idx].idx--;
-            } else {
-                app_step_color_temp[idx].dir = COLOR_MOVE_UP;
-                app_step_color_temp[idx].idx++;
-            }
-        }
-    }
-
-    move2ColorTemp.colorTemperature = app_step_color_temp[idx].step_color_temp[app_step_color_temp[idx].idx];
-
-    TL_SETSTRUCTCONTENT(dstEpInfo, 0);
-    dstEpInfo.profileId = HA_PROFILE_ID;
-
-    uint16_t groupList[APS_GROUP_TABLE_NUM];
-    uint8_t groupCnt = 0;
-    aps_group_list_get(&groupCnt, groupList);
-
-    /* command for groups */
-    dstEpInfo.dstAddrMode = APS_SHORT_GROUPADDR_NOEP;
-    for (uint8_t i = 0; i < groupCnt; i++) {
-        aps_group_tbl_ent_t *grEntry = aps_group_search(groupList[i], ep);
-        if (grEntry) {
-            dstEpInfo.dstAddr.shortAddr = grEntry->group_addr;
-            zcl_lightColorCtrl_move2colorTemperatureCmd(ep, &dstEpInfo, TRUE, &move2ColorTemp);
-            APP_DEBUG(DEBUG_COLOR_CTRL_EN, "Color step %s for bind to temperature: %d src_ep: %d, dst_ep: %d, addr: 0x%04x, status: %d\r\n",
-                    app_step_color_temp[idx].dir?"Down":"Up", move2ColorTemp.colorTemperature, ep, grEntry->n_endpoints, grEntry->group_addr, st);
         }
     }
 
@@ -426,13 +218,13 @@ void app_color_step_temp_one_key(uint8_t ep, uint8_t up_down) {
                                    dstEp,
                                    dstEpInfo.dstAddrMode,
                                    dstEpInfo.dstAddr,
-                                   ZCL_CMD_LIGHT_COLOR_CONTROL_MOVE_TO_COLOR_TEMPERATURE,
-                                  &move2ColorTemp);
+                                   ZCL_CMD_LIGHT_COLOR_CONTROL_STEP_COLOR_TEMPERATURE,
+                                  &step);
             }
-            zcl_lightColorCtrl_move2colorTemperatureCmd(ep, &dstEpInfo, TRUE, &move2ColorTemp);
+            st = zcl_lightColorCtrl_stepColorTemperatureCmd(ep, &dstEpInfo, TRUE, &step);
 #if DEBUG_COLOR_CTRL_EN
-            APP_DEBUG(DEBUG_COLOR_CTRL_EN, "Color step %s for bind to temperature: %d ep: %d, clId: 0x%04x, addrMode: %d - %s, ",
-                    app_step_color_temp[idx].dir?"Down":"Up", move2ColorTemp.colorTemperature, bind_tbl->srcEp, bind_tbl->clusterId, dstEpInfo.dstAddrMode,
+            APP_DEBUG(DEBUG_COLOR_CTRL_EN, "Color step %s for bind with size: %d, ep: %d, clId: 0x%04x, addrMode: %d - %s, ",
+                    up_down?"Down":"Up", step.stepSize, bind_tbl->srcEp, bind_tbl->clusterId, dstEpInfo.dstAddrMode,
                     (dstEpInfo.dstAddrMode == APS_DSTADDR_EP_NOTPRESETNT)?"APS_DSTADDR_EP_NOTPRESETNT":
                     (dstEpInfo.dstAddrMode == APS_SHORT_GROUPADDR_NOEP)?"APS_SHORT_GROUPADDR_NOEP":
                     (dstEpInfo.dstAddrMode == APS_SHORT_DSTADDR_WITHEP)?"APS_SHORT_DSTADDR_WITHEP":"APS_LONG_DSTADDR_WITHEP");
@@ -465,7 +257,7 @@ int32_t app_repeatCmdColorCtrl(void *args) {
     epInfo_t dstEpInfo;
     TL_SETSTRUCTCONTENT(dstEpInfo, 0);
     dstEpInfo.profileId = HA_PROFILE_ID;
-    dstEpInfo.txOptions = APS_TX_OPT_ACK_TX;
+//    dstEpInfo.txOptions = APS_TX_OPT_ACK_TX;
 
     dstEpInfo.dstAddrMode = r_cmd->dstAddrMode;
     if (dstEpInfo.dstAddrMode == APS_SHORT_GROUPADDR_NOEP) {
@@ -477,10 +269,13 @@ int32_t app_repeatCmdColorCtrl(void *args) {
 
     switch(r_cmd->cmdId) {
         case ZCL_CMD_LIGHT_COLOR_CONTROL_MOVE_TO_COLOR_TEMPERATURE:
-            zcl_lightColorCtrl_move2colorTemperature(r_cmd->srcEp, &dstEpInfo, TRUE, ZCL_SEQ_NUM, &r_cmd->move2ColorTemp);
+            zcl_lightColorCtrl_move2colorTemperature(r_cmd->srcEp, &dstEpInfo, FALSE, ZCL_SEQ_NUM, &r_cmd->move2ColorTemp);
             break;
         case ZCL_CMD_LIGHT_COLOR_CONTROL_STOP_MOVE_STEP:
-            zcl_lightColorCtrl_stopMoveStep(r_cmd->srcEp, &dstEpInfo, TRUE, ZCL_SEQ_NUM, &r_cmd->stopMoveStep);
+            zcl_lightColorCtrl_stopMoveStep(r_cmd->srcEp, &dstEpInfo, FALSE, ZCL_SEQ_NUM, &r_cmd->stopMoveStep);
+            break;
+        case ZCL_CMD_LIGHT_COLOR_CONTROL_STEP_COLOR_TEMPERATURE:
+            zcl_lightColorCtrl_stepColorTemperature(r_cmd->srcEp, &dstEpInfo, FALSE, ZCL_SEQ_NUM, &r_cmd->stepColorTemp);
             break;
         default:
             break;

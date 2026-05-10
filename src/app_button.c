@@ -193,11 +193,9 @@ static void read_button_color_temp(uint8_t i) {
                           i+1, button->counter, app_button.button[i].row_gpio, app_button.button[i].line_gpio);
                 switch(button->counter) {
                     case ACTION_SINGLE:                                         // 1
-                        if (device_settings.switchType[i] == ZCL_CUSTOM_SWITCH_TYPE_COLOR_TEMP_MOVE) {
-                            up_down = COLOR_MOVE_ALTERNATE;
-                        }
-                        APP_DEBUG(DEBUG_BUTTON_EN, "Color temperature. Step %s\r\n", up_down?"down":"up");
+                        if (device_settings.switchType[i] != ZCL_CUSTOM_SWITCH_TYPE_COLOR_TEMP_MOVE) {
                             app_color_step_temp(i+1, up_down);
+                        }
                         break;
                     case ACTION_QUADRUPLE:                                      // 4
                         batteryCb(NULL);

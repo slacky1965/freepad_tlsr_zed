@@ -7,6 +7,7 @@ uint8_t repeat_cmd_num = 0;
 static int32_t timerRepeatCmdNumClearCb(void *args) {
     APP_DEBUG(DEBUG_REPEAT_EN, "timerRepeatCmdNumClearCb()\r\n");
     repeat_cmd_num = 0;
+    app_reset_repeat_cmd();
     timerRepeatCmdNumClearEvt = NULL;
     return -1;
 }
@@ -67,7 +68,7 @@ void app_del_repeat_cmd(uint16_t clId, uint8_t srcEp, uint8_t dstEp, uint8_t add
 
 bool app_add_repeat_cmd(uint16_t clId, uint8_t srcEp, uint8_t dstEp, uint8_t addrMode, tl_zb_addr_t addr, uint8_t cmdId, void *args) {
 
-    APP_DEBUG(DEBUG_REPEAT_EN, "clId: 0x%04x, srcEp: %d, dstEp: %d, addrMode: %d\r\n", clId, srcEp, dstEp, addrMode);
+    APP_DEBUG(DEBUG_REPEAT_EN, "app_add_repeat_cmd(). clId: 0x%04x, srcEp: %d, dstEp: %d, addrMode: %d\r\n", clId, srcEp, dstEp, addrMode);
     for (uint8_t i = 0; i < REPEAT_CMD_NUM; i++) {
         if (!repeat_cmd[i].used) {
             repeat_cmd_num++;
@@ -106,6 +107,9 @@ bool app_add_repeat_cmd(uint16_t clId, uint8_t srcEp, uint8_t dstEp, uint8_t add
                         case ZCL_CMD_LIGHT_COLOR_CONTROL_STOP_MOVE_STEP:
                             memcpy(&repeat_cmd[i].stopMoveStep, (colorCtrlStopCmd_t*)args, sizeof(colorCtrlStopCmd_t));
                             break;
+                        case ZCL_CMD_LIGHT_COLOR_CONTROL_STEP_COLOR_TEMPERATURE:
+                            memcpy(&repeat_cmd[i].stepColorTemp, (colorCtrlStepCTCmd_t*)args, sizeof(colorCtrlStepCTCmd_t));
+                            break;
                         default:
                             break;
                     }
@@ -117,7 +121,7 @@ bool app_add_repeat_cmd(uint16_t clId, uint8_t srcEp, uint8_t dstEp, uint8_t add
                 if (timerRepeatCmdNumClearEvt) {
                     TL_ZB_TIMER_CANCEL(&timerRepeatCmdNumClearEvt);
                 }
-                timerRepeatCmdNumClearEvt = TL_ZB_TIMER_SCHEDULE(timerRepeatCmdNumClearCb, NULL, TIMEOUT_20SEC);
+                timerRepeatCmdNumClearEvt = TL_ZB_TIMER_SCHEDULE(timerRepeatCmdNumClearCb, NULL, TIMEOUT_30SEC);
             }
             return true;
         }

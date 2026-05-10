@@ -118,6 +118,7 @@ int32_t app_repeatCmdOnOff(void *args) {
         memcpy(dstEpInfo.dstAddr.extAddr, r_cmd->dstAddr.extAddr, sizeof(extAddr_t));
     }
     cmdOnOffSend(r_cmd->srcEp, &dstEpInfo, r_cmd->cmdId);
+//    if (repeat_cmd_num > 0) repeat_cmd_num--;
 
     return -1;
 }

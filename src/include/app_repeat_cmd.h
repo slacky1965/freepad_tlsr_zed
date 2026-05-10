@@ -17,6 +17,7 @@ typedef struct {
     step_t          level_step;
     colorCtrlMove2CTCmd_t move2ColorTemp;
     colorCtrlStopCmd_t    stopMoveStep;
+    colorCtrlStepCTCmd_t  stepColorTemp;
     recallScene_t   recallScene;
 } repeat_cmd_t;
 
