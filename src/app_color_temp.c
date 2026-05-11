@@ -1,5 +1,10 @@
 #include "app_main.h"
 
+
+#define CMD_MOVE_TO_COLOR_TEMP      ZCL_CMD_LIGHT_COLOR_CONTROL_MOVE_TO_COLOR_TEMPERATURE
+#define CMD_STOP_MOVE_STEP          ZCL_CMD_LIGHT_COLOR_CONTROL_STOP_MOVE_STEP
+#define CMD_STEP_COLOR_TEMP         ZCL_CMD_LIGHT_COLOR_CONTROL_STEP_COLOR_TEMPERATURE
+
 static status_t st = 0xFF;
 
 void app_color_move_to_temp(uint8_t ep, uint8_t up_down) {
@@ -39,23 +44,17 @@ void app_color_move_to_temp(uint8_t ep, uint8_t up_down) {
     for (uint8_t j = 0; j < APS_BINDING_TABLE_NUM; j++) {
         if (bind_tbl->used && bind_tbl->clusterId == ZCL_CLUSTER_LIGHTING_COLOR_CONTROL && bind_tbl->srcEp == ep) {
             dstEpInfo.dstAddrMode = bind_tbl->dstAddrMode;
+            dstEpInfo.txOptions = APS_TX_OPT_ACK_TX;
             if (dstEpInfo.dstAddrMode == APS_SHORT_GROUPADDR_NOEP) {
-                dstEpInfo.txOptions = 0;
                 dstEpInfo.dstAddr.shortAddr = bind_tbl->groupAddr;
+                dstEp = 0;
             } else {
-                dstEpInfo.txOptions = APS_TX_OPT_ACK_TX;
                 dstEpInfo.dstAddrMode = APS_LONG_DSTADDR_WITHEP;
                 dstEpInfo.dstEp = bind_tbl->dstExtAddrInfo.dstEp;
                 memcpy(dstEpInfo.dstAddr.extAddr, bind_tbl->dstExtAddrInfo.extAddr, sizeof(extAddr_t));
                 dstEp = bind_tbl->dstExtAddrInfo.dstEp;
-                app_add_repeat_cmd(ZCL_CLUSTER_LIGHTING_COLOR_CONTROL,
-                                   ep,
-                                   dstEp,
-                                   dstEpInfo.dstAddrMode,
-                                   dstEpInfo.dstAddr,
-                                   ZCL_CMD_LIGHT_COLOR_CONTROL_MOVE_TO_COLOR_TEMPERATURE,
-                                  &move2ColorTemp);
             }
+            app_add_repeat_cmd(ZCL_CLUSTER_LIGHTING_COLOR_CONTROL, ep, dstEp, dstEpInfo.dstAddrMode, dstEpInfo.dstAddr, CMD_MOVE_TO_COLOR_TEMP, &move2ColorTemp);
             zcl_lightColorCtrl_move2colorTemperatureCmd(ep, &dstEpInfo, TRUE, &move2ColorTemp);
 #if DEBUG_COLOR_CTRL_EN
             APP_DEBUG(DEBUG_COLOR_CTRL_EN, "Color move %s for bind to temperature: %d ep: %d, clId: 0x%04x, addrMode: %d - %s, ",
@@ -121,23 +120,17 @@ void app_color_stop_step(uint8_t ep) {
     for (uint8_t j = 0; j < APS_BINDING_TABLE_NUM; j++) {
         if (bind_tbl->used && bind_tbl->clusterId == ZCL_CLUSTER_LIGHTING_COLOR_CONTROL && bind_tbl->srcEp == ep) {
             dstEpInfo.dstAddrMode = bind_tbl->dstAddrMode;
+            dstEpInfo.txOptions = APS_TX_OPT_ACK_TX;
             if (dstEpInfo.dstAddrMode == APS_SHORT_GROUPADDR_NOEP) {
-                dstEpInfo.txOptions = 0;
                 dstEpInfo.dstAddr.shortAddr = bind_tbl->groupAddr;
+                dstEp = 0;
             } else {
-                dstEpInfo.txOptions = APS_TX_OPT_ACK_TX;
                 dstEpInfo.dstAddrMode = APS_LONG_DSTADDR_WITHEP;
                 dstEpInfo.dstEp = bind_tbl->dstExtAddrInfo.dstEp;
                 memcpy(dstEpInfo.dstAddr.extAddr, bind_tbl->dstExtAddrInfo.extAddr, sizeof(extAddr_t));
                 dstEp = bind_tbl->dstExtAddrInfo.dstEp;
-                app_add_repeat_cmd(ZCL_CLUSTER_LIGHTING_COLOR_CONTROL,
-                                   ep,
-                                   dstEp,
-                                   dstEpInfo.dstAddrMode,
-                                   dstEpInfo.dstAddr,
-                                   ZCL_CMD_LIGHT_COLOR_CONTROL_STOP_MOVE_STEP,
-                                  &stop);
             }
+            app_add_repeat_cmd(ZCL_CLUSTER_LIGHTING_COLOR_CONTROL, ep, dstEp, dstEpInfo.dstAddrMode, dstEpInfo.dstAddr, CMD_STOP_MOVE_STEP, &stop);
             st = zcl_lightColorCtrl_stopMoveStepCmd(ep, &dstEpInfo, TRUE, &stop);
 #if DEBUG_COLOR_CTRL_EN
             APP_DEBUG(DEBUG_COLOR_CTRL_EN, "Color move stop for bind, ep: %d, clId: 0x%04x, addrMode: %d - %s, ",
@@ -204,23 +197,18 @@ void app_color_step_temp(uint8_t ep, uint8_t up_down) {
     for (uint8_t j = 0; j < APS_BINDING_TABLE_NUM; j++) {
         if (bind_tbl->used && bind_tbl->clusterId == ZCL_CLUSTER_LIGHTING_COLOR_CONTROL && bind_tbl->srcEp == ep) {
             dstEpInfo.dstAddrMode = bind_tbl->dstAddrMode;
+            dstEpInfo.txOptions = APS_TX_OPT_ACK_TX;
             if (dstEpInfo.dstAddrMode == APS_SHORT_GROUPADDR_NOEP) {
-                dstEpInfo.txOptions = 0;
-                dstEpInfo.dstAddr.shortAddr = bind_tbl->groupAddr;
-            } else {
                 dstEpInfo.txOptions = APS_TX_OPT_ACK_TX;
+                dstEpInfo.dstAddr.shortAddr = bind_tbl->groupAddr;
+                dstEp = 0;
+            } else {
                 dstEpInfo.dstAddrMode = APS_LONG_DSTADDR_WITHEP;
                 dstEpInfo.dstEp = bind_tbl->dstExtAddrInfo.dstEp;
                 memcpy(dstEpInfo.dstAddr.extAddr, bind_tbl->dstExtAddrInfo.extAddr, sizeof(extAddr_t));
                 dstEp = bind_tbl->dstExtAddrInfo.dstEp;
-                app_add_repeat_cmd(ZCL_CLUSTER_LIGHTING_COLOR_CONTROL,
-                                   ep,
-                                   dstEp,
-                                   dstEpInfo.dstAddrMode,
-                                   dstEpInfo.dstAddr,
-                                   ZCL_CMD_LIGHT_COLOR_CONTROL_STEP_COLOR_TEMPERATURE,
-                                  &step);
             }
+            app_add_repeat_cmd(ZCL_CLUSTER_LIGHTING_COLOR_CONTROL, ep, dstEp, dstEpInfo.dstAddrMode, dstEpInfo.dstAddr, CMD_STEP_COLOR_TEMP, &step);
             st = zcl_lightColorCtrl_stepColorTemperatureCmd(ep, &dstEpInfo, TRUE, &step);
 #if DEBUG_COLOR_CTRL_EN
             APP_DEBUG(DEBUG_COLOR_CTRL_EN, "Color step %s for bind with size: %d, ep: %d, clId: 0x%04x, addrMode: %d - %s, ",
@@ -257,7 +245,6 @@ int32_t app_repeatCmdColorCtrl(void *args) {
     epInfo_t dstEpInfo;
     TL_SETSTRUCTCONTENT(dstEpInfo, 0);
     dstEpInfo.profileId = HA_PROFILE_ID;
-//    dstEpInfo.txOptions = APS_TX_OPT_ACK_TX;
 
     dstEpInfo.dstAddrMode = r_cmd->dstAddrMode;
     if (dstEpInfo.dstAddrMode == APS_SHORT_GROUPADDR_NOEP) {

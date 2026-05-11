@@ -122,19 +122,15 @@ static void afApsAckCb(void *args) {
                 switch(pApsDataCnf->clusterId) {
                     case ZCL_CLUSTER_GEN_ON_OFF:
                         app_repeatCmdOnOff(r_cmd);
-//                        TL_ZB_TIMER_SCHEDULE(app_repeatCmdOnOff, r_cmd, TIMEOUT_250MS);
                         break;
                     case ZCL_CLUSTER_GEN_LEVEL_CONTROL:
                         app_repeatCmdLevel(r_cmd);
-//                        TL_ZB_TIMER_SCHEDULE(app_repeatCmdLevel, r_cmd, TIMEOUT_250MS);
                         break;
                     case ZCL_CLUSTER_GEN_SCENES:
                         app_repeatCmdScene(r_cmd);
-//                        TL_ZB_TIMER_SCHEDULE(app_repeatCmdScene, r_cmd, TIMEOUT_250MS);
                         break;
                     case ZCL_CLUSTER_LIGHTING_COLOR_CONTROL:
                         app_repeatCmdColorCtrl(r_cmd);
-//                        TL_ZB_TIMER_SCHEDULE(app_repeatCmdColorCtrl, r_cmd, TIMEOUT_250MS);
                         break;
                     default:
                         break;
@@ -143,8 +139,6 @@ static void afApsAckCb(void *args) {
         }
         r_cmd->used = false;
         if (repeat_cmd_num > 0) repeat_cmd_num--;
-//    } else {
-//        if (pApsDataCnf->status == APS_STATUS_SUCCESS && app_getTimeoutPollRate() < TIMEOUT_30SEC) app_setPollRate(TIMEOUT_30SEC, 1);
     }
     if (repeat_cmd_num == 0) clearButtonSleepTimer();
 }

@@ -3,7 +3,6 @@
 static status_t st = 0xFF;
 
 void app_move_to_level(uint8_t ep, uint8_t up_down) {
-    status_t st;
     epInfo_t dstEpInfo;
     moveToLvl_t move2Level;
     move2Level.level = up_down?device_settings.levelMin[ep-1]:device_settings.levelMax[ep-1];
@@ -45,28 +44,21 @@ void app_move_to_level(uint8_t ep, uint8_t up_down) {
     for (uint8_t j = 0; j < APS_BINDING_TABLE_NUM; j++) {
         if (bind_tbl->used && bind_tbl->clusterId == ZCL_CLUSTER_GEN_LEVEL_CONTROL && bind_tbl->srcEp == ep) {
             dstEpInfo.dstAddrMode = bind_tbl->dstAddrMode;
+            dstEpInfo.txOptions = APS_TX_OPT_ACK_TX;
             if (dstEpInfo.dstAddrMode == APS_SHORT_GROUPADDR_NOEP) {
-                dstEpInfo.txOptions = 0;
                 dstEpInfo.dstAddr.shortAddr = bind_tbl->groupAddr;
+                dstEp = 0;
             } else {
-                dstEpInfo.txOptions = APS_TX_OPT_ACK_TX;
                 dstEpInfo.dstAddrMode = APS_LONG_DSTADDR_WITHEP;
                 dstEpInfo.dstEp = bind_tbl->dstExtAddrInfo.dstEp;
                 memcpy(dstEpInfo.dstAddr.extAddr, bind_tbl->dstExtAddrInfo.extAddr, sizeof(extAddr_t));
                 dstEp = bind_tbl->dstExtAddrInfo.dstEp;
-                app_add_repeat_cmd(ZCL_CLUSTER_GEN_LEVEL_CONTROL,
-                                   ep,
-                                   dstEp,
-                                   dstEpInfo.dstAddrMode,
-                                   dstEpInfo.dstAddr,
-                                   up_down?ZCL_CMD_LEVEL_MOVE_TO_LEVEL:ZCL_CMD_LEVEL_MOVE_TO_LEVEL_WITH_ON_OFF,
-                                  &move2Level);
             }
             if (up_down == LEVEL_MOVE_UP) {
-//                app_add_repeat_cmd(ZCL_CLUSTER_GEN_LEVEL_CONTROL, ep, dstEp, dstEpInfo.dstAddrMode, dstEpInfo.dstAddr, ZCL_CMD_LEVEL_MOVE_TO_LEVEL_WITH_ON_OFF, &move2Level);
+                app_add_repeat_cmd(ZCL_CLUSTER_GEN_LEVEL_CONTROL, ep, dstEp, dstEpInfo.dstAddrMode, dstEpInfo.dstAddr, ZCL_CMD_LEVEL_MOVE_TO_LEVEL_WITH_ON_OFF, &move2Level);
                 st = zcl_level_move2levelWithOnOffCmd(ep, &dstEpInfo, TRUE, &move2Level);
             } else {
-//                app_add_repeat_cmd(ZCL_CLUSTER_GEN_LEVEL_CONTROL, ep, dstEp, dstEpInfo.dstAddrMode, dstEpInfo.dstAddr, ZCL_CMD_LEVEL_MOVE_TO_LEVEL, &move2Level);
+                app_add_repeat_cmd(ZCL_CLUSTER_GEN_LEVEL_CONTROL, ep, dstEp, dstEpInfo.dstAddrMode, dstEpInfo.dstAddr, ZCL_CMD_LEVEL_MOVE_TO_LEVEL, &move2Level);
                 st = zcl_level_move2levelCmd(ep, &dstEpInfo, TRUE, &move2Level);
             }
 #if DEBUG_LEVEL_EN
@@ -97,7 +89,6 @@ void app_move_to_level(uint8_t ep, uint8_t up_down) {
 
 void app_move_level(uint8_t ep, uint8_t up_down) {
 
-    status_t st;
     epInfo_t dstEpInfo;
     move_t move;
     move.moveMode = up_down;
@@ -128,18 +119,16 @@ void app_move_level(uint8_t ep, uint8_t up_down) {
     /* command when binding */
     TL_SETSTRUCTCONTENT(dstEpInfo, 0);
     dstEpInfo.profileId = HA_PROFILE_ID;
-//    dstEpInfo.dstAddrMode = APS_DSTADDR_EP_NOTPRESETNT;
-//    dstEpInfo.dstAddrMode = APS_LONG_DSTADDR_WITHEP;
 
     aps_binding_entry_t *bind_tbl = bindTblEntryGet();
     for (uint8_t j = 0; j < APS_BINDING_TABLE_NUM; j++) {
         if (bind_tbl->used && bind_tbl->clusterId == ZCL_CLUSTER_GEN_LEVEL_CONTROL && bind_tbl->srcEp == ep) {
             dstEpInfo.dstAddrMode = bind_tbl->dstAddrMode;
+            dstEpInfo.txOptions = APS_TX_OPT_ACK_TX;
             if (dstEpInfo.dstAddrMode == APS_SHORT_GROUPADDR_NOEP) {
-                dstEpInfo.txOptions = 0;
                 dstEpInfo.dstAddr.shortAddr = bind_tbl->groupAddr;
+                dstEp = 0;
             } else {
-                dstEpInfo.txOptions = APS_TX_OPT_ACK_TX;
                 dstEpInfo.dstAddrMode = APS_LONG_DSTADDR_WITHEP;
                 dstEpInfo.dstEp = bind_tbl->dstExtAddrInfo.dstEp;
                 memcpy(dstEpInfo.dstAddr.extAddr, bind_tbl->dstExtAddrInfo.extAddr, sizeof(extAddr_t));
@@ -210,11 +199,11 @@ void app_stop_level(uint8_t ep) {
     for (uint8_t j = 0; j < APS_BINDING_TABLE_NUM; j++) {
         if (bind_tbl->used && bind_tbl->clusterId == ZCL_CLUSTER_GEN_LEVEL_CONTROL && bind_tbl->srcEp == ep) {
             dstEpInfo.dstAddrMode = bind_tbl->dstAddrMode;
+            dstEpInfo.txOptions = APS_TX_OPT_ACK_TX;
             if (dstEpInfo.dstAddrMode == APS_SHORT_GROUPADDR_NOEP) {
-                dstEpInfo.txOptions = 0;
                 dstEpInfo.dstAddr.shortAddr = bind_tbl->groupAddr;
+                dstEp = 0;
             } else {
-                dstEpInfo.txOptions = APS_TX_OPT_ACK_TX;
                 dstEpInfo.dstAddrMode = APS_LONG_DSTADDR_WITHEP;
                 dstEpInfo.dstEp = bind_tbl->dstExtAddrInfo.dstEp;
                 memcpy(dstEpInfo.dstAddr.extAddr, bind_tbl->dstExtAddrInfo.extAddr, sizeof(extAddr_t));
@@ -287,11 +276,11 @@ void app_step_level(uint8_t ep, uint8_t up_down) {
     for (uint8_t j = 0; j < APS_BINDING_TABLE_NUM; j++) {
         if (bind_tbl->used && bind_tbl->clusterId == ZCL_CLUSTER_GEN_LEVEL_CONTROL && bind_tbl->srcEp == ep) {
             dstEpInfo.dstAddrMode = bind_tbl->dstAddrMode;
+            dstEpInfo.txOptions = APS_TX_OPT_ACK_TX;
             if (dstEpInfo.dstAddrMode == APS_SHORT_GROUPADDR_NOEP) {
-                dstEpInfo.txOptions = 0;
                 dstEpInfo.dstAddr.shortAddr = bind_tbl->groupAddr;
+                dstEp = 0;
             } else {
-                dstEpInfo.txOptions = APS_TX_OPT_ACK_TX;
                 dstEpInfo.dstAddrMode = APS_LONG_DSTADDR_WITHEP;
                 dstEpInfo.dstEp = bind_tbl->dstExtAddrInfo.dstEp;
                 memcpy(dstEpInfo.dstAddr.extAddr, bind_tbl->dstExtAddrInfo.extAddr, sizeof(extAddr_t));
@@ -334,7 +323,6 @@ int32_t app_repeatCmdLevel(void *args) {
     epInfo_t dstEpInfo;
     TL_SETSTRUCTCONTENT(dstEpInfo, 0);
     dstEpInfo.profileId = HA_PROFILE_ID;
-    dstEpInfo.txOptions = APS_TX_OPT_ACK_TX;
 
     dstEpInfo.dstAddrMode = r_cmd->dstAddrMode;
     if (dstEpInfo.dstAddrMode == APS_SHORT_GROUPADDR_NOEP) {
@@ -347,22 +335,21 @@ int32_t app_repeatCmdLevel(void *args) {
     switch(r_cmd->cmdId) {
         case ZCL_CMD_LEVEL_MOVE_TO_LEVEL_WITH_ON_OFF:
         case ZCL_CMD_LEVEL_MOVE_TO_LEVEL:
-            zcl_level_move2level(r_cmd->srcEp, &dstEpInfo, TRUE, ZCL_SEQ_NUM, r_cmd->cmdId, &r_cmd->move2Level);
+            zcl_level_move2level(r_cmd->srcEp, &dstEpInfo, FALSE, ZCL_SEQ_NUM, r_cmd->cmdId, &r_cmd->move2Level);
             break;
         case ZCL_CMD_LEVEL_MOVE_WITH_ON_OFF:
         case ZCL_CMD_LEVEL_MOVE:
-            zcl_level_move(r_cmd->srcEp, &dstEpInfo, TRUE, ZCL_SEQ_NUM, r_cmd->cmdId, &r_cmd->level_move);
+            zcl_level_move(r_cmd->srcEp, &dstEpInfo, FALSE, ZCL_SEQ_NUM, r_cmd->cmdId, &r_cmd->level_move);
             break;
         case ZCL_CMD_LEVEL_STOP:
-            zcl_level_stop(r_cmd->srcEp, &dstEpInfo, TRUE, ZCL_SEQ_NUM, r_cmd->cmdId, &r_cmd->level_stop);
+            zcl_level_stop(r_cmd->srcEp, &dstEpInfo, FALSE, ZCL_SEQ_NUM, r_cmd->cmdId, &r_cmd->level_stop);
             break;
         case ZCL_CMD_LEVEL_STEP:
-            zcl_level_step(r_cmd->srcEp, &dstEpInfo, TRUE, ZCL_SEQ_NUM, r_cmd->cmdId, &r_cmd->level_step);
+            zcl_level_step(r_cmd->srcEp, &dstEpInfo, FALSE, ZCL_SEQ_NUM, r_cmd->cmdId, &r_cmd->level_step);
             break;
         default:
             break;
     }
-//    if (repeat_cmd_num > 0) repeat_cmd_num--;
 
     return -1;
 }

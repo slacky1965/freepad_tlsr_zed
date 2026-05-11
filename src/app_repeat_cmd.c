@@ -8,6 +8,7 @@ static int32_t timerRepeatCmdNumClearCb(void *args) {
     APP_DEBUG(DEBUG_REPEAT_EN, "timerRepeatCmdNumClearCb()\r\n");
     repeat_cmd_num = 0;
     app_reset_repeat_cmd();
+    clearButtonSleepTimer();
     timerRepeatCmdNumClearEvt = NULL;
     return -1;
 }
@@ -24,18 +25,22 @@ void app_timerRepeatCmdNumClearStop() {
 }
 repeat_cmd_t *app_find_repeat_cmd(uint16_t clId, uint8_t srcEp, uint8_t dstEp, uint8_t addrMode, tl_zb_addr_t *addr) {
 
+    APP_DEBUG(DEBUG_REPEAT_EN, "app_find_repeat_cmd - clId: 0x%04x, srcEp: %d, dstEp: %d, addrMode: %d, addr: 0x%02x%02x%02x%02x%02x%02x%02x%02x\r\n",
+                                              clId, srcEp, dstEp, addrMode,
+                                              addr->extAddr[0], addr->extAddr[1], addr->extAddr[2], addr->extAddr[3],
+                                              addr->extAddr[4], addr->extAddr[5], addr->extAddr[6], addr->extAddr[7]);
     for (uint8_t i = 0; i < REPEAT_CMD_NUM; i++) {
         if (repeat_cmd[i].used) {
             if (repeat_cmd[i].clId == clId && repeat_cmd[i].srcEp == srcEp &&
                     repeat_cmd[i].dstEp == dstEp && repeat_cmd[i].dstAddrMode == addrMode) {
                 if (repeat_cmd[i].dstAddrMode == APS_SHORT_GROUPADDR_NOEP) {
                     if (repeat_cmd[i].dstAddr.shortAddr == addr->shortAddr) {
-                        APP_DEBUG(DEBUG_REPEAT_EN, "i: %d\r\n", i);
+//                        APP_DEBUG(DEBUG_REPEAT_EN, "APS_SHORT_GROUPADDR_NOEP i: %d\r\n", i);
                         return &repeat_cmd[i];
                     }
                 } else {
                     if (ZB_64BIT_ADDR_CMP(repeat_cmd[i].dstAddr.extAddr, addr->extAddr)) {
-                        APP_DEBUG(DEBUG_REPEAT_EN, "i: %d\r\n", i);
+//                        APP_DEBUG(DEBUG_REPEAT_EN, "APS_LONG_DSTADDR_WITHEP i: %d\r\n", i);
                         return &repeat_cmd[i];
                     }
                 }
@@ -68,7 +73,10 @@ void app_del_repeat_cmd(uint16_t clId, uint8_t srcEp, uint8_t dstEp, uint8_t add
 
 bool app_add_repeat_cmd(uint16_t clId, uint8_t srcEp, uint8_t dstEp, uint8_t addrMode, tl_zb_addr_t addr, uint8_t cmdId, void *args) {
 
-    APP_DEBUG(DEBUG_REPEAT_EN, "app_add_repeat_cmd(). clId: 0x%04x, srcEp: %d, dstEp: %d, addrMode: %d\r\n", clId, srcEp, dstEp, addrMode);
+    APP_DEBUG(DEBUG_REPEAT_EN, "app_add_repeat_cmd - clId: 0x%04x, srcEp: %d, dstEp: %d, addrMode: %d, addr: 0x%02x%02x%02x%02x%02x%02x%02x%02x\r\n",
+                                                clId, srcEp, dstEp, addrMode,
+                                                addr.extAddr[0], addr.extAddr[1], addr.extAddr[2], addr.extAddr[3],
+                                                addr.extAddr[4], addr.extAddr[5], addr.extAddr[6], addr.extAddr[7]);
     for (uint8_t i = 0; i < REPEAT_CMD_NUM; i++) {
         if (!repeat_cmd[i].used) {
             repeat_cmd_num++;
