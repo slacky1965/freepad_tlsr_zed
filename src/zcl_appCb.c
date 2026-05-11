@@ -318,11 +318,13 @@ static void app_zclCfgReportCmd(uint8_t endPoint, uint16_t clusterId, zclCfgRepo
                     TL_ZB_TIMER_CANCEL(&g_appCtx.timerBatteryEvt);
                 }
                 g_appCtx.timerBatteryEvt = TL_ZB_TIMER_SCHEDULE(batteryCb, NULL, pCfgReportCmd->attrList[i].maxReportInt * 1000);
+
+                if (device_model == DEVICE_BUTTON_8) app_setPollRate(TIMEOUT_2MIN, 1);
+                else app_setPollRate(TIMEOUT_3MIN, 1);
             }
         }
     }
 
-    app_setPollRate(TIMEOUT_2MIN, 1);
 }
 
 /*********************************************************************
@@ -984,3 +986,10 @@ status_t app_levelCb(zclIncomingAddrInfo_t *pAddrInfo, u8 cmdId, void *cmdPayloa
     return ZCL_STA_SUCCESS;
 }
 
+status_t app_colorCtrlCb(zclIncomingAddrInfo_t *pAddrInfo, u8 cmdId, void *cmdPayload) {
+    APP_DEBUG(DEBUG_ZCL_CB_EN, "app_colorCtrlCb\r\n");
+    status_t status = ZCL_STA_SUCCESS;
+
+    return status;
+
+}

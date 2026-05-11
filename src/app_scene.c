@@ -27,11 +27,11 @@ void app_scene_send(uint8_t ep) {
         for (uint8_t j = 0; j < APS_BINDING_TABLE_NUM; j++) {
             if (bind_tbl->used && bind_tbl->clusterId == ZCL_CLUSTER_GEN_SCENES && bind_tbl->srcEp == ep) {
                 dstEpInfo.dstAddrMode = bind_tbl->dstAddrMode;
+                dstEpInfo.txOptions = APS_TX_OPT_ACK_TX;
                 if (dstEpInfo.dstAddrMode == APS_SHORT_GROUPADDR_NOEP) {
-                    dstEpInfo.txOptions = 0;
                     dstEpInfo.dstAddr.shortAddr = bind_tbl->groupAddr;
+                    dstEp = 0;
                 } else {
-                    dstEpInfo.txOptions = APS_TX_OPT_ACK_TX;
                     dstEpInfo.dstAddrMode = APS_LONG_DSTADDR_WITHEP;
                     dstEpInfo.dstEp = bind_tbl->dstExtAddrInfo.dstEp;
                     memcpy(dstEpInfo.dstAddr.extAddr, bind_tbl->dstExtAddrInfo.extAddr, sizeof(extAddr_t));
@@ -75,7 +75,6 @@ int32_t app_repeatCmdScene(void *args) {
     epInfo_t dstEpInfo;
     TL_SETSTRUCTCONTENT(dstEpInfo, 0);
     dstEpInfo.profileId = HA_PROFILE_ID;
-    dstEpInfo.txOptions = APS_TX_OPT_ACK_TX;
 
     dstEpInfo.dstAddrMode = r_cmd->dstAddrMode;
     if (dstEpInfo.dstAddrMode == APS_SHORT_GROUPADDR_NOEP) {
@@ -84,7 +83,7 @@ int32_t app_repeatCmdScene(void *args) {
         dstEpInfo.dstEp = r_cmd->dstEp;
         memcpy(dstEpInfo.dstAddr.extAddr, r_cmd->dstAddr.extAddr, sizeof(extAddr_t));
     }
-    zcl_scene_recallSceneCmd(r_cmd->srcEp, &dstEpInfo, TRUE, &r_cmd->recallScene);
+    zcl_scene_recallSceneCmd(r_cmd->srcEp, &dstEpInfo, FALSE, &r_cmd->recallScene);
 
     return -1;
 }

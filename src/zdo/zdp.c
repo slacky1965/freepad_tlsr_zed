@@ -38,8 +38,8 @@ typedef struct {
 
 static void app_zdo_descriptorsIndicate(void *buf) {
     zdo_descriptorsIndicate(buf);
-    if (device_model == DEVICE_BUTTON_8) app_setPollRate(TIMEOUT_1MIN, 3);
-    else app_setPollRate(TIMEOUT_2MIN, 1);
+    if (device_model == DEVICE_BUTTON_8) app_setPollRate(TIMEOUT_2MIN, 1);
+    else app_setPollRate(TIMEOUT_3MIN, 1);
 }
 
 const zdp_funcList_t g_zdpClientFunc[] = {

@@ -102,18 +102,18 @@ static void afApsAckCb(void *args) {
                                               pApsDataCnf->dstAddrMode,
                                               (tl_zb_addr_t*)&pApsDataCnf->dstAddr);
 #if UART_PRINTF_MODE
-    DEBUG(DEBUG_REPEAT_EN, "afApsAckCb() - status: 0x%02x, clId: 0x%04x, src_ep: %d, dst_ep: %d, ",
+    APP_DEBUG(DEBUG_REPEAT_EN, "afApsAckCb() - status: 0x%02x, clId: 0x%04x, src_ep: %d, dst_ep: %d, ",
             pApsDataCnf->status, pApsDataCnf->clusterId, pApsDataCnf->srcEndpoint, pApsDataCnf->dstEndpoint);
     if (pApsDataCnf->dstAddrMode == APS_SHORT_GROUPADDR_NOEP) {
         APP_DEBUG(DEBUG_REPEAT_EN, "short_addr: 0x%04x, ", pApsDataCnf->dstAddr.addr_short);
     } else {
-        DEBUG(DEBUG_REPEAT_EN, "ieee: 0x%02x%02x%02x%02x%02x%02x%02x%02x, ",
+        APP_DEBUG(DEBUG_REPEAT_EN, "ieee: 0x%02x%02x%02x%02x%02x%02x%02x%02x, ",
                 pApsDataCnf->dstAddr.addr_long[0], pApsDataCnf->dstAddr.addr_long[1],
                 pApsDataCnf->dstAddr.addr_long[2], pApsDataCnf->dstAddr.addr_long[3],
                 pApsDataCnf->dstAddr.addr_long[4], pApsDataCnf->dstAddr.addr_long[5],
                 pApsDataCnf->dstAddr.addr_long[6], pApsDataCnf->dstAddr.addr_long[7]);
     }
-    DEBUG(DEBUG_REPEAT_EN, "r_cmd: %s\r\n", r_cmd?"true":"false");
+    APP_DEBUG(DEBUG_REPEAT_EN, "r_cmd: %s\r\n", r_cmd?"true":"false");
 #endif
 
     if (r_cmd) {
@@ -121,13 +121,16 @@ static void afApsAckCb(void *args) {
             if (pApsDataCnf->dstAddrMode != APS_SHORT_GROUPADDR_NOEP) {
                 switch(pApsDataCnf->clusterId) {
                     case ZCL_CLUSTER_GEN_ON_OFF:
-                        TL_ZB_TIMER_SCHEDULE(app_repeatCmdOnOff, r_cmd, TIMEOUT_250MS);
+                        app_repeatCmdOnOff(r_cmd);
                         break;
                     case ZCL_CLUSTER_GEN_LEVEL_CONTROL:
-                        TL_ZB_TIMER_SCHEDULE(app_repeatCmdLevel, r_cmd, TIMEOUT_250MS);
+                        app_repeatCmdLevel(r_cmd);
                         break;
                     case ZCL_CLUSTER_GEN_SCENES:
-                        TL_ZB_TIMER_SCHEDULE(app_repeatCmdScene, r_cmd, TIMEOUT_250MS);
+                        app_repeatCmdScene(r_cmd);
+                        break;
+                    case ZCL_CLUSTER_LIGHTING_COLOR_CONTROL:
+                        app_repeatCmdColorCtrl(r_cmd);
                         break;
                     default:
                         break;
@@ -136,8 +139,6 @@ static void afApsAckCb(void *args) {
         }
         r_cmd->used = false;
         if (repeat_cmd_num > 0) repeat_cmd_num--;
-    } else {
-        if (app_getTimeoutPollRate() < TIMEOUT_30SEC) app_setPollRate(TIMEOUT_30SEC, 1);
     }
     if (repeat_cmd_num == 0) clearButtonSleepTimer();
 }

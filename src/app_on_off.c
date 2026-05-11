@@ -60,17 +60,17 @@ void app_cmdOnOff(uint8_t ep, uint8_t command) {
     for (uint8_t j = 0; j < APS_BINDING_TABLE_NUM; j++) {
         if (bind_tbl->used && bind_tbl->clusterId == ZCL_CLUSTER_GEN_ON_OFF && bind_tbl->srcEp == ep) {
             dstEpInfo.dstAddrMode = bind_tbl->dstAddrMode;
+            dstEpInfo.txOptions = APS_TX_OPT_ACK_TX;
             if (dstEpInfo.dstAddrMode == APS_SHORT_GROUPADDR_NOEP) {
-                dstEpInfo.txOptions = 0;
                 dstEpInfo.dstAddr.shortAddr = bind_tbl->groupAddr;
+                dstEp = 0;
             } else {
-                dstEpInfo.txOptions = APS_TX_OPT_ACK_TX;
                 dstEpInfo.dstAddrMode = APS_LONG_DSTADDR_WITHEP;
                 dstEpInfo.dstEp = bind_tbl->dstExtAddrInfo.dstEp;
                 memcpy(dstEpInfo.dstAddr.extAddr, bind_tbl->dstExtAddrInfo.extAddr, sizeof(extAddr_t));
                 dstEp = bind_tbl->dstExtAddrInfo.dstEp;
-                app_add_repeat_cmd(ZCL_CLUSTER_GEN_ON_OFF, ep, dstEp, dstEpInfo.dstAddrMode, dstEpInfo.dstAddr, command, NULL);
             }
+            app_add_repeat_cmd(ZCL_CLUSTER_GEN_ON_OFF, ep, dstEp, dstEpInfo.dstAddrMode, dstEpInfo.dstAddr, command, NULL);
             st = cmdOnOffSend(ep, &dstEpInfo, command);
 #if DEBUG_ONOFF_EN
             APP_DEBUG(DEBUG_ONOFF_EN, "OnOff for bind. cmd: %s, src_ep: %d, dst_ep: %d, clId: 0x%04x, addrMode: %d - %s, ",
@@ -108,7 +108,6 @@ int32_t app_repeatCmdOnOff(void *args) {
     epInfo_t dstEpInfo;
     TL_SETSTRUCTCONTENT(dstEpInfo, 0);
     dstEpInfo.profileId = HA_PROFILE_ID;
-    dstEpInfo.txOptions = APS_TX_OPT_ACK_TX;
 
     dstEpInfo.dstAddrMode = r_cmd->dstAddrMode;
     if (dstEpInfo.dstAddrMode == APS_SHORT_GROUPADDR_NOEP) {
@@ -117,7 +116,9 @@ int32_t app_repeatCmdOnOff(void *args) {
         dstEpInfo.dstEp = r_cmd->dstEp;
         memcpy(dstEpInfo.dstAddr.extAddr, r_cmd->dstAddr.extAddr, sizeof(extAddr_t));
     }
-    cmdOnOffSend(r_cmd->srcEp, &dstEpInfo, r_cmd->cmdId);
+    zcl_sendCmd(r_cmd->srcEp, &dstEpInfo, ZCL_CLUSTER_GEN_ON_OFF, r_cmd->cmdId, TRUE,
+                           ZCL_FRAME_CLIENT_SERVER_DIR, FALSE, 0, ZCL_SEQ_NUM, 0, NULL);
+//    cmdOnOffSend(r_cmd->srcEp, &dstEpInfo, r_cmd->cmdId);
 
     return -1;
 }

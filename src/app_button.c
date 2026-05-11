@@ -16,7 +16,7 @@ typedef struct {
     uint32_t    hold_time;
     uint32_t    row_gpio;
     uint32_t    line_gpio;
-    bool        level_up;
+    bool        dir_up;
 } button_t;
 
 typedef struct {
@@ -85,6 +85,146 @@ static int32_t factoryResetCb(void *args) {
     return -1;
 }
 
+static void read_button_color_temp(uint8_t i) {
+    uint8_t up_down = 0xFF;
+    button_t *button = &app_button.button[i];
+    app_button_t *key = &app_button;
+//    zcl_levelAttr_t *levelAttr = zcl_levelAttrsGet();
+//    levelAttr += i;
+
+    switch(device_settings.switchType[i]) {
+        case ZCL_CUSTOM_SWITCH_TYPE_COLOR_TEMP_MOVE_UP:
+            up_down = COLOR_MOVE_UP;
+            break;
+        case ZCL_CUSTOM_SWITCH_TYPE_COLOR_TEMP_MOVE_DOWN:
+            up_down = COLOR_MOVE_DOWN;
+            break;
+        default:
+            break;
+    }
+
+    drv_gpio_output_en(app_button.button[i].row_gpio, 1);
+    bool status = drv_gpio_read(app_button.button[i].line_gpio)?true:false;
+    drv_gpio_output_en(app_button.button[i].row_gpio, 0);
+
+    if (!status) {
+        if (BIT_IS_SET(key->pressed, i)) {
+            if (clock_time_exceed(button->hold_time, TIMEOUT_TICK_500MS)) {
+                if (button->hold == HOLD_NOT_PRESENT) {
+                    button->hold = HOLD_PRESENT;
+                    APP_DEBUG(DEBUG_BUTTON_EN, "Color temperature. Press and hold button: %d, row_gpio: 0x%04x, line_gpio: 0x%04x\r\n",
+                              i+1, app_button.button[i].row_gpio, app_button.button[i].line_gpio);
+                    if (factory_reset) {
+                        if (timerFactoryResetEvt) {
+                            TL_ZB_TIMER_CANCEL(&timerFactoryResetEvt);
+                        }
+                        button_factory_reset_start();
+                    } else {
+                        if (device_settings.switchType[i] == ZCL_CUSTOM_SWITCH_TYPE_COLOR_TEMP_MOVE) {
+                            if (!button->dir_up) {
+                                up_down = LEVEL_MOVE_UP;
+                                button->dir_up = true;
+                            } else {
+                                up_down = LEVEL_MOVE_DOWN;
+                                button->dir_up = false;
+                            }
+                        }
+                        APP_DEBUG(DEBUG_BUTTON_EN, "Color temperature. Key: %d, up_down: %d, button->dir_up: %d\r\n", i+1, up_down, button->dir_up);
+                        app_color_move_to_temp(i+1, up_down);
+                    }
+                }
+            }
+        }
+        if (button->debounce != DEBOUNCE_BUTTON) {
+            button->debounce++;
+            BIT_SET(key->debounce, i);
+            if (button->debounce == DEBOUNCE_BUTTON) {
+                BIT_SET(key->pressed, i);
+                BIT_CLR(key->debounce, i);
+                g_appCtx.not_sleep = true;
+//                APP_DEBUG(DEBUG_BUTTON_EN, "Key %d pressed color temperature\r\n", i+1);
+                light_blink_start(1, 30, 1);
+                if (!clock_time_exceed(button->pressed_time, TIMEOUT_TICK_500MS)) {
+                    button->counter++;
+                    BIT_SET(key->counter, i);
+                } else {
+                    button->counter = 1;
+                    BIT_SET(key->counter, i);
+                    if (!zb_isDeviceJoinedNwk() && !zb_isDeviceFactoryNew()) {
+                        zb_rejoinReq(zb_apsChannelMaskGet(), g_bdbAttrs.scanDuration);
+                        app_setPollRate(TIMEOUT_20SEC, 5);
+                    }
+                }
+                button->hold_time = button->pressed_time = clock_time();
+            }
+        }
+    } else {
+        if (button->debounce != 1) {
+            button->debounce--;
+            BIT_SET(key->debounce, i);
+            if (button->debounce == 1 && (BIT_IS_SET(key->pressed, i) || button->hold == HOLD_FIX)) {
+                BIT_SET(key->released, i);
+                BIT_CLR(key->debounce, i);
+                g_appCtx.not_sleep = true;
+//                APP_DEBUG(DEBUG_BUTTON_EN, "Key %d released color temperature\r\n", i+1);
+            }
+        }
+    }
+
+    if (BIT_IS_SET(key->released, i) && clock_time_exceed(button->pressed_time, TIMEOUT_TICK_500MS)) {
+        if (button->counter == RESET_DEVICE_COUNTER) {
+            zb_resetDevice();
+        } else if (button->counter >= FACTORY_RESET_COUNTER) {
+            APP_DEBUG(DEBUG_BUTTON_EN, "Reset Factory is ready from color temperature\r\n");
+            factory_reset = true;
+            light_blink_stop();
+            light_on();
+            if (timerFactoryResetEvt) {
+                TL_ZB_TIMER_CANCEL(&timerFactoryResetEvt);
+            }
+            timerFactoryResetEvt = TL_ZB_TIMER_SCHEDULE(factoryResetCb, NULL, TIMEOUT_3SEC);
+        } else {
+            if (button->hold) {
+                APP_DEBUG(DEBUG_BUTTON_EN, "Color temperature. Released button: %d, row_gpio: 0x%04x, line_gpio: 0x%04x\r\n",
+                          i+1, app_button.button[i].row_gpio, app_button.button[i].line_gpio);
+                app_color_stop_step(i+1);
+            } else {
+                APP_DEBUG(DEBUG_BUTTON_EN, "Color temperature. Button %d pressed %d times, row_gpio: 0x%04x, line_gpio: 0x%04x\r\n",
+                          i+1, button->counter, app_button.button[i].row_gpio, app_button.button[i].line_gpio);
+                switch(button->counter) {
+                    case ACTION_SINGLE:                                         // 1
+                        if (device_settings.switchType[i] != ZCL_CUSTOM_SWITCH_TYPE_COLOR_TEMP_MOVE) {
+                            app_color_step_temp(i+1, up_down);
+                        }
+                        break;
+                    case ACTION_QUADRUPLE:                                      // 4
+                        batteryCb(NULL);
+                        if (!g_appCtx.timerSetPollRateEvt) {
+                            app_setPollRate(TIMEOUT_20SEC, 5);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+
+            }
+            if (!repeat_cmd_num) clearSleepTimer();
+        }
+
+        button->counter = 0;
+        BIT_CLR(key->counter, i);
+        BIT_CLR(key->pressed, i);
+        BIT_CLR(key->released, i);
+        button->hold = HOLD_NOT_PRESENT;
+    } else if (BIT_IS_SET(key->pressed, i) && button->counter == 1 && button->hold == HOLD_PRESENT) {
+        button->hold = HOLD_FIX;
+        button->counter = 0;
+        BIT_CLR(key->counter, i);
+        BIT_CLR(key->pressed, i);
+        if (!repeat_cmd_num) clearSleepTimer();
+    }
+}
+
 static void read_button_level(uint8_t i) {
     uint8_t up_down = 0xFF;
     uint8_t cmdOnOff = 0xFF;
@@ -124,15 +264,15 @@ static void read_button_level(uint8_t i) {
                         button_factory_reset_start();
                     } else {
                         if (device_settings.switchType[i] == ZCL_CUSTOM_SWITCH_TYPE_LEVEL_MOVE) {
-                            if (!button->level_up) {
+                            if (!button->dir_up) {
                                 up_down = LEVEL_MOVE_UP;
-                                button->level_up = true;
+                                button->dir_up = true;
                             } else {
                                 up_down = LEVEL_MOVE_DOWN;
-                                button->level_up = false;
+                                button->dir_up = false;
                             }
                         }
-                        APP_DEBUG(DEBUG_BUTTON_EN, "Level. Key: %d, up_down: %d, button->level_up: %d\r\n", i+1, up_down, button->level_up);
+                        APP_DEBUG(DEBUG_BUTTON_EN, "Level. Key: %d, up_down: %d, button->dir_up: %d\r\n", i+1, up_down, button->dir_up);
                         app_move_to_level(i+1, up_down);
                     }
                 }
@@ -597,9 +737,15 @@ void button_handler() {
             case ZCL_SWITCH_TYPE_MULTIFUNCTION:
                 read_button_multifunction(i);
                 break;
+            case ZCL_CUSTOM_SWITCH_TYPE_LEVEL_MOVE:
             case ZCL_CUSTOM_SWITCH_TYPE_LEVEL_MOVE_UP:
             case ZCL_CUSTOM_SWITCH_TYPE_LEVEL_MOVE_DOWN:
                 read_button_level(i);
+                break;
+            case ZCL_CUSTOM_SWITCH_TYPE_COLOR_TEMP_MOVE:
+            case ZCL_CUSTOM_SWITCH_TYPE_COLOR_TEMP_MOVE_UP:
+            case ZCL_CUSTOM_SWITCH_TYPE_COLOR_TEMP_MOVE_DOWN:
+                read_button_color_temp(i);
                 break;
             case ZCL_CUSTOM_SWITCH_TYPE_SCENE:
                 read_button_scene(i);
