@@ -1,7 +1,7 @@
 #ifndef SRC_INCLUDE_APP_REPEAT_CMD_H_
 #define SRC_INCLUDE_APP_REPEAT_CMD_H_
 
-#define REPEAT_CMD_NUM 32
+#define REPEAT_CMD_NUM 16
 
 typedef struct {
     uint8_t         used;
