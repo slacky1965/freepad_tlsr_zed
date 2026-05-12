@@ -2,6 +2,7 @@
 
 Remote control with 8/12/20 buttons Zigbee End Device by TLSR8258 (ZTU module)
 
+<img src="https://img.shields.io/badge/Repository-freepad__tlsr__zed-blue?logo=github" alt="GitHub version" /img> 
 ---
 
 <img src="doc/images/freepad_device.jpg"/>
