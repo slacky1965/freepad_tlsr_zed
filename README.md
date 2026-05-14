@@ -47,6 +47,25 @@ Remote control with 8/12/20 buttons Zigbee End Device by TLSR8258 (ZTU module)
 
 ---
 
+## Компиляция из исходников (Windows)
+
+- Клонируйте этот репозиторий<br>
+	`git clone https://github.com/slacky1965/freepad_tlsr_zed.git`
+- Установите [Telink IoT Studio](https://doc.telink-semi.cn/tools/telink_iot_studio/TelinkIoTStudio_V2025.2.zip)
+- Импортируйте проект в `Telink IoT Studio -> File -> Import -> General -> Existing Projects into Workspace`. В `Select root directory` укажите директорию, куда склонировали проект. Отметьте `Copy projects into workspace`. Нажмите `Finish`.
+- Отредактируйте пути в `makefile` к компилятору (он там, куда установили `Telink IoT Studio`).
+- Разверните проект и в `Build Targets` запустите `clean` для проверки. Если отработает без ошибок, значить все сделано правильно.
+
+## Как загрузить прошивку
+
+1. Через оригинальный программатор.
+2. Через DIY программатор. Как его сделать описано [тут](https://github.com/pvvx/TLSRPGM)
+3. Через USB-UART [адаптер](https://github.com/pvvx/ATC_MiThermometer?tab=readme-ov-file#the-usb-com-adapter-writes-the-firmware-in-explorer-web-version).
+
+Прошивка грузится по адресу 0.
+
+---
+
 <img src="doc/images/schematic_diagram.jpg"/>
 
 ---
