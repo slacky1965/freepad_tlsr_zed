@@ -11,6 +11,8 @@ Remote control with 8/12/20 buttons Zigbee End Device by TLSR8258 (ZTU module)
 
 `Freepad` является многофункциональным пультом дистанционного управления устройствами в сети `Zigbee`. `Freepad` является конечным устройством, которое питается от батарейки `CR2450`. `Freepad` может быть реализован с 8, 12 или 20 кнопками. Нумерация кнопок происходит слева направо, сверху вниз. Номер кнопки соответствует номеру `endpoint'а`.
 
+Прототипом этой версии `Freepad'а` был проект на CC2530 - ["Универсальный пульт Zigbee"](https://modkam.ru/2019/07/31/universalnyj-pult-zigbee/)
+
 ## Возможности
 
 Выбор работы каждой клавиши выбирается отдельно через `Switch type`.
@@ -56,12 +58,14 @@ Remote control with 8/12/20 buttons Zigbee End Device by TLSR8258 (ZTU module)
 - Установите [Telink IoT Studio](https://doc.telink-semi.cn/tools/telink_iot_studio/TelinkIoTStudio_V2025.2.zip)
 - Импортируйте проект в `Telink IoT Studio -> File -> Import -> General -> Existing Projects into Workspace`. В `Select root directory` укажите директорию, куда склонировали проект. Отметьте `Copy projects into workspace`. Нажмите `Finish`.
 - Отредактируйте пути в `makefile` к компилятору (он там, куда установили `Telink IoT Studio`).
-- Разверните проект и в `Build Targets` запустите `clean` для проверки. Если отработает без ошибок, значить все сделано правильно.
+- Разверните проект и в `Build Targets` запустите `clean` для проверки. Если отработает без ошибок, значит все сделано правильно.
+
+Проект можно собрать не только из IDE, можно в терминале дать команду `make`.
 
 ## Как загрузить прошивку
 
 1. Через оригинальный программатор.
-2. Через DIY программатор. Как его сделать описано [тут](https://github.com/pvvx/TLSRPGM)
+2. Через DIY программатор. Как его сделать описано [тут](https://github.com/pvvx/TLSRPGM).
 3. Через USB-UART [адаптер](https://github.com/pvvx/ATC_MiThermometer?tab=readme-ov-file#the-usb-com-adapter-writes-the-firmware-in-explorer-web-version).
 
 Прошивка грузится по адресу 0.
