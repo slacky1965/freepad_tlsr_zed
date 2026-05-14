@@ -9,7 +9,7 @@ Remote control with 8/12/20 buttons Zigbee End Device by TLSR8258 (ZTU module)
 
 ## Описание
 
-`Freepad` является многофункциональным пультом дистанционного управления устройствами в сети `Zigbee`. `Freepad` является конечным устройством, которое питается от батарейки `CR2032`. `Freepad` может быть реализован с 8, 12 или 20 кнопками. Нумерация кнопок происходит слева направо, сверху вниз. Номер кнопки соответствует номеру `endpoint'а`.
+`Freepad` является многофункциональным пультом дистанционного управления устройствами в сети `Zigbee`. `Freepad` является конечным устройством, которое питается от батарейки `CR2450`. `Freepad` может быть реализован с 8, 12 или 20 кнопками. Нумерация кнопок происходит слева направо, сверху вниз. Номер кнопки соответствует номеру `endpoint'а`.
 
 ## Возможности
 
@@ -50,7 +50,9 @@ Remote control with 8/12/20 buttons Zigbee End Device by TLSR8258 (ZTU module)
 ## Компиляция из исходников (Windows)
 
 - Клонируйте этот репозиторий<br>
-	`git clone https://github.com/slacky1965/freepad_tlsr_zed.git`
+	```
+	git clone https://github.com/slacky1965/freepad_tlsr_zed.git
+	```
 - Установите [Telink IoT Studio](https://doc.telink-semi.cn/tools/telink_iot_studio/TelinkIoTStudio_V2025.2.zip)
 - Импортируйте проект в `Telink IoT Studio -> File -> Import -> General -> Existing Projects into Workspace`. В `Select root directory` укажите директорию, куда склонировали проект. Отметьте `Copy projects into workspace`. Нажмите `Finish`.
 - Отредактируйте пути в `makefile` к компилятору (он там, куда установили `Telink IoT Studio`).
