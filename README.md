@@ -63,12 +63,32 @@ Remote control with 8/12/20 buttons Zigbee End Device by TLSR8258 (ZTU module)
 
 <div align="center"> 
 <a><img src="doc/images/board_pcb_top.jpg" alt="Board PCB top"/></a><br>
-Вид сверху
+Вид сверху 20 кнопок
 </div><br><br>
 
 <div align="center"> 
 <a><img src="doc/images/board_pcb_bottom.jpg" alt="Board PCB bottom"/></a><br>
-Вид снизу
+Вид снизу 20 кнопок
+</div><br><br>
+
+<div align="center"> 
+<a><img src="doc/images/board_12_pcb_top.jpg" alt="Board 12 PCB top"/></a><br>
+Вид сверху 12 кнопок
+</div><br><br>
+
+<div align="center"> 
+<a><img src="doc/images/board_12_pcb_bottom.jpg" alt="Board 12 PCB bottom"/></a><br>
+Вид снизу 12 кнопок
+</div><br><br>
+
+<div align="center"> 
+<a><img src="doc/images/board_8_pcb_top.jpg" alt="Board 8 PCB top"/></a><br>
+Вид сверху 8 кнопок
+</div><br><br>
+
+<div align="center"> 
+<a><img src="doc/images/board_8_pcb_bottom.jpg" alt="Board 8 PCB bottom"/></a><br>
+Вид снизу 8 кнопок
 </div><br><br>
 
 Гербер можно создать самостоятельно вот из этого [проекта](https://oshwlab.com/novgorod73/zigbee-freepad)
