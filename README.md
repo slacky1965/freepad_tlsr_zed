@@ -56,7 +56,7 @@ Remote control with 8/12/20 buttons Zigbee End Device by TLSR8258 (ZTU module)
 Принципиальная схема устройства.
 
 <div align="center"> 
-<a><img src="doc/images/schematic_diagram.jpg" alt="Schematic diagram" width="58%" height="auto"></a>
+<a><img src="doc/images/schematic_diagram.jpg" alt="Schematic diagram" width="65%" height="auto"></a>
 </div>
 
 Плата.
