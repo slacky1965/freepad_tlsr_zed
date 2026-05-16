@@ -5,7 +5,7 @@ Remote control with 8/12/20 buttons Zigbee End Device by TLSR8258 (ZTU module)
 [![](https://img.shields.io/badge/Repository-freepad__tlsr__zed-blue.svg?logo=github)](https://github.com/slacky1965/freepad_tlsr_zed)
 [![](https://img.shields.io/github/v/release/slacky1965/freepad_tlsr_zed.svg)](https://github.com/slacky1965/freepad_tlsr_zed/releases)
 
-<img src="doc/images/freepad_device.jpg"/>
+<img src="doc/images/freepad_devices.jpg"/>
 
 ## Описание
 
@@ -51,18 +51,44 @@ Remote control with 8/12/20 buttons Zigbee End Device by TLSR8258 (ZTU module)
 
 ---
 
+## Железо
+
+Принципиальная схема устройства.
+
+<div align="center"> 
+<a><img src="doc/images/schematic_diagram.jpg" alt="Schematic diagram" width="58%" height="auto"></a>
+</div>
+
+Плата.
+
+<div align="center"> 
+<a><img src="doc/images/board_pcb_top.jpg" alt="Board PCB top"/></a><br>
+Вид сверху
+</div><br><br>
+
+<div align="center"> 
+<a><img src="doc/images/board_pcb_bottom.jpg" alt="Board PCB bottom"/></a><br>
+Вид снизу
+</div><br><br>
+
+Гербер можно создать самостоятельно вот из этого [проекта](https://oshwlab.com/novgorod73/zigbee-freepad)
+
+Файлы `STL` для печатного корпуса - [case.rar](doc/case/case.rar)
+
+---
+
 ## Компиляция из исходников (Windows)
 
-- Клонируйте этот репозиторий<br>
+- Установите [Telink IoT Studio](https://doc.telink-semi.cn/tools/telink_iot_studio/TelinkIoTStudio_V2025.2.zip). Откройте его и создайте пространство `Workspace`, где будут храниться проекты.
+- Клонируйте этот репозиторий в `Workspace`, который создали в `Telink IoT Studio`<br>
 	```
 	git clone https://github.com/slacky1965/freepad_tlsr_zed.git
 	```
-- Установите [Telink IoT Studio](https://doc.telink-semi.cn/tools/telink_iot_studio/TelinkIoTStudio_V2025.2.zip)
-- Импортируйте проект в `Telink IoT Studio -> File -> Import -> General -> Existing Projects into Workspace`. В `Select root directory` укажите директорию, куда склонировали проект. Отметьте `Copy projects into workspace`. Нажмите `Finish`.
+- Импортируйте проект в `Telink IoT Studio` - `File -> Import -> General -> Existing Projects into Workspace`. В `Select root directory` укажите директорию, куда склонировали проект. Нажмите `Finish`.
 - Отредактируйте пути в `makefile` к компилятору (он там, куда установили `Telink IoT Studio`).
 - Разверните проект и в `Build Targets` запустите `clean` для проверки. Если отработает без ошибок, значит все сделано правильно.
 
-Проект можно собрать не только из IDE, можно в терминале дать команду `make`.
+Проект можно собрать не только из IDE, можно в терминале, находясь в директории проекта, дать команду `make`.
 
 ## Как загрузить прошивку
 
@@ -74,16 +100,3 @@ Remote control with 8/12/20 buttons Zigbee End Device by TLSR8258 (ZTU module)
 
 ---
 
-<img src="doc/images/schematic_diagram.jpg"/>
-
----
-
-<img src="doc/images/board_pcb_top.jpg"/>
-
----
-
-<img src="doc/images/board_pcb_bottom.jpg"/>
-
----
-
-<!-- https://oshwlab.com/novgorod73/zigbee-freepad >
