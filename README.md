@@ -118,7 +118,7 @@ Remote control with 8/12/20 buttons Zigbee End Device by TLSR8258 (ZTU module)
 </div>
 - Зайти в `z2m` в `Bind` и для 1 и 2 `endpoint'ов` настроить биндинг на нужную лампу.
 <div align="center"> 
-<a><img src="doc/images/bind_brightness_level_up.jpg" alt="Bind brightness level up"/><img src="doc/images/bind_brightness_level_down.jpg" alt="Bind brightness level up"/></a>
+<a><img src="doc/images/bind_brightness_level_up.jpg" alt="Bind brightness level up" width="40%" height="auto"/><img src="doc/images/bind_brightness_level_down.jpg" alt="Bind brightness level up" width="40%" height="auto"/></a>
 </div><br>
 Не забываем после нажатия `Bind` в web-интерфейсе нажимать на любую кнопку на `Freepad'е`.
 
