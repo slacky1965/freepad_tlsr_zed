@@ -79,7 +79,7 @@ Remote control with 8/12/20 buttons Zigbee End Device by TLSR8258 (ZTU module)
 
 ## Компиляция из исходников (Windows)
 
-- Установите [Telink IoT Studio](https://doc.telink-semi.cn/tools/telink_iot_studio/TelinkIoTStudio_V2025.2.zip). Откройте его и создайте пространство `Workspace`, где будут храниться проекты.
+- Установите [Telink IoT Studio](https://doc.telink-semi.cn/tools/telink_iot_studio/TelinkIoTStudio_V2025.2.zip). Откройте `Telink IoT Studio` и создайте пространство `Workspace`, где будут храниться проекты.
 - Клонируйте этот репозиторий в `Workspace`, который создали в `Telink IoT Studio`<br>
 	```
 	git clone https://github.com/slacky1965/freepad_tlsr_zed.git
@@ -99,4 +99,42 @@ Remote control with 8/12/20 buttons Zigbee End Device by TLSR8258 (ZTU module)
 Прошивка грузится по адресу 0.
 
 ---
+
+## Управление `Freepad`
+
+- Для добавления `Freepad` в сеть нукжно 5 раз быстро нажать на любую кнопку, после чего светодиод загорится на 3 секунды. Пока он горит, нужно нажать и удерживать эту же кнопку.
+- Для сброса (reset) микроконтроллера `Freepad` нужно просто бысто нажать 10 раз любую кнопку.
+- Для принудительной отправки репорта по батарейке нужно просто быстро нажать 4 раза любую кнопку.
+
+
+## Настройка
+
+Рассмотрим настройку на примере управления яркостью умной лампы.
+
+- Выбрать кнопки, которые будут отвечать за увеличение и уменьшение яркости. Пусть это будут 1 и 2 кнопки.
+- Зайти в `z2m` в `Exposes` и назначить для 1 кнопки `brightness_level_up`, а для 2 кнопки `brightness_level_down`.<br>
+<div align="center"> 
+<a><img src="doc/images/switch_type_brightness_level_up.jpg" alt="Setting brightness level up"/><img src="doc/images/switch_type_brightness_level_down.jpg" alt="Setting brightness level up"/></a>
+</div>
+- Зайти в `z2m` в `Bind` и для 1 и 2 `endpoint'ов` настроить биндинг на нужную лампу.
+<div align="center"> 
+<a><img src="doc/images/bind_brightness_level_up.jpg" alt="Bind brightness level up"/><img src="doc/images/bind_brightness_level_down.jpg" alt="Bind brightness level up"/></a>
+</div><br>
+Не забываем после нажатия `Bind` в web-интерфейсе нажимать на любую кнопку на `Freepad'е`.
+
+Все готово. 
+
+Теперь при коротком нажатии на 1 кнопку лампа будет включаться. При двойном нажатии на 1 кнопку будет увеличивать яркость на один шаг. При удержании будет повышать яркость, пока удерживается кнопка.
+
+При коротком нажатии на 2 кнопку лампа будет выключаться. При двойном нажатии на 2 кнопку будет уменьшаться яркость на один шаг. При удержании будет уменьшаться яркость, пока удерживается кнопка.
+
+Связаться со мной можно в **[Telegram](https://t.me/slacky1965)**.
+
+### Если захотите отблагодарить автора, то это можно сделать через [ЮMoney](https://yoomoney.ru/to/4100118300223495)
+
+## История версий
+- 1.0.01
+	- Начало.
+
+[Наверх](#Top)
 
