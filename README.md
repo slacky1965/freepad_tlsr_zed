@@ -5,19 +5,23 @@ Remote control with 8/12/20 buttons Zigbee End Device by TLSR8258 (ZTU module)
 [![](https://img.shields.io/badge/Repository-freepad__tlsr__zed-blue.svg?logo=github)](https://github.com/slacky1965/freepad_tlsr_zed)
 [![](https://img.shields.io/github/v/release/slacky1965/freepad_tlsr_zed.svg)](https://github.com/slacky1965/freepad_tlsr_zed/releases)
 
-<img src="doc/images/freepad_device.jpg"/>
+<img src="doc/images/freepad_devices.jpg"/>
+
+<img src="doc/images/freepad_device_8.jpg"/>
 
 ## Описание
 
-`Freepad` является многофункциональным пультом дистанционного управления устройствами в сети `Zigbee`. `Freepad` является конечным устройством, которое питается от батарейки `CR2450`. `Freepad` может быть реализован с 8, 12 или 20 кнопками. Нумерация кнопок происходит слева направо, сверху вниз. Номер кнопки соответствует номеру `endpoint'а`.
+`Freepad` является многофункциональным пультом дистанционного управления устройствами в сети `Zigbee`. `Freepad` является конечным устройством, которое питается от батарейки `CR2450`. `Freepad` может быть реализован с 8, 12 или 20 кнопками. Нумерация кнопок происходит слева направо, сверху вниз (светодиод сверху). Номер кнопки соответствует номеру `endpoint'а`.
 
 Прототипом этой версии `Freepad'а` был проект на CC2530 - ["Универсальный пульт Zigbee"](https://modkam.ru/2019/07/31/universalnyj-pult-zigbee/)
 
 ## Возможности
 
+`Freepad` дает возможность управлять устройствами в сети `Zigbee` напрямую, без использования автоматизаций в УД.
+
 Выбор работы каждой клавиши выбирается отдельно через `Switch type`.
 
-- `toggle` - устанавливает режим работы кнопки для включения и выключения какого-либо устройства. Фиксируются только только одиночные нажатия. Высылаются команды `on`, `off` или `toggle` в зависимости от настроек `Switch actions`. Команды высылаются только при нажатии кнопки.
+- `toggle` - устанавливает режим работы кнопки для включения и выключения какого-либо устройства. Фиксируются только одиночные нажатия. Высылаются команды `on`, `off` или `toggle` в зависимости от настроек `Switch actions`. Команды высылаются только при нажатии кнопки.
 - `momentary` - устанавливает режим работы кнопки для включения и выключения какого-либо устройства. Фиксируются только одиночные нажатия. Высылаются команды `on`, `off` или `toggle` в зависимости от настроек `Switch actions`. Команды высылаются как при нажатии кнопки, так и при ее отпускании.
 - `multifunction` - фиксируются 1 нажатие, 2 нажатия, 3 нажатия, удержание и отпускание кнопки после удержания. Высылаются одноименные `actions` - `"hold"`, `"single"`, `"double"`, `"triple"` и `"release"`.
 - `brightness_level` - устанавливает режим работы кнопки для управления яркостью одной кнопкой. Фиксируется одиночное нажатие, удержание и отпускание после удержания.
@@ -49,18 +53,64 @@ Remote control with 8/12/20 buttons Zigbee End Device by TLSR8258 (ZTU module)
 
 ---
 
+## Железо
+
+Принципиальная схема устройства.
+
+<div align="center"> 
+<a><img src="doc/images/schematic_diagram.jpg" alt="Schematic diagram" width="65%" height="auto"></a>
+</div>
+
+Плата.
+
+<div align="center"> 
+<a><img src="doc/images/board_pcb_top.jpg" alt="Board PCB top"/></a><br>
+Вид сверху 20 кнопок
+</div><br><br>
+
+<div align="center"> 
+<a><img src="doc/images/board_pcb_bottom.jpg" alt="Board PCB bottom"/></a><br>
+Вид снизу 20 кнопок
+</div><br><br>
+
+<div align="center"> 
+<a><img src="doc/images/board_12_pcb_top.jpg" alt="Board 12 PCB top"/></a><br>
+Вид сверху 12 кнопок
+</div><br><br>
+
+<div align="center"> 
+<a><img src="doc/images/board_12_pcb_bottom.jpg" alt="Board 12 PCB bottom"/></a><br>
+Вид снизу 12 кнопок
+</div><br><br>
+
+<div align="center"> 
+<a><img src="doc/images/board_8_pcb_top.jpg" alt="Board 8 PCB top"/></a><br>
+Вид сверху 8 кнопок
+</div><br><br>
+
+<div align="center"> 
+<a><img src="doc/images/board_8_pcb_bottom.jpg" alt="Board 8 PCB bottom"/></a><br>
+Вид снизу 8 кнопок
+</div><br><br>
+
+Гербер можно создать самостоятельно вот из этого [проекта](https://oshwlab.com/novgorod73/zigbee-freepad)
+
+Файлы `STL` для печатного корпуса - [case.rar](doc/case/case.rar)
+
+---
+
 ## Компиляция из исходников (Windows)
 
-- Клонируйте этот репозиторий<br>
+- Установите [Telink IoT Studio](https://doc.telink-semi.cn/tools/telink_iot_studio/TelinkIoTStudio_V2025.2.zip). Откройте `Telink IoT Studio` и создайте пространство `Workspace`, где будут храниться проекты.
+- Клонируйте этот репозиторий в `Workspace`, который создали в `Telink IoT Studio`<br>
 	```
 	git clone https://github.com/slacky1965/freepad_tlsr_zed.git
 	```
-- Установите [Telink IoT Studio](https://doc.telink-semi.cn/tools/telink_iot_studio/TelinkIoTStudio_V2025.2.zip)
-- Импортируйте проект в `Telink IoT Studio -> File -> Import -> General -> Existing Projects into Workspace`. В `Select root directory` укажите директорию, куда склонировали проект. Отметьте `Copy projects into workspace`. Нажмите `Finish`.
+- Импортируйте проект в `Telink IoT Studio` - `File -> Import -> General -> Existing Projects into Workspace`. В `Select root directory` укажите директорию, куда склонировали проект. Нажмите `Finish`.
 - Отредактируйте пути в `makefile` к компилятору (он там, куда установили `Telink IoT Studio`).
 - Разверните проект и в `Build Targets` запустите `clean` для проверки. Если отработает без ошибок, значит все сделано правильно.
 
-Проект можно собрать не только из IDE, можно в терминале дать команду `make`.
+Проект можно собрать не только из IDE, можно в терминале, находясь в директории проекта, дать команду `make`.
 
 ## Как загрузить прошивку
 
@@ -72,16 +122,74 @@ Remote control with 8/12/20 buttons Zigbee End Device by TLSR8258 (ZTU module)
 
 ---
 
-<img src="doc/images/schematic_diagram.jpg"/>
+## Управление `Freepad`
+
+- Для добавления `Freepad` в сеть нужно 5 раз быстро нажать на любую кнопку, после чего светодиод загорится на 3 секунды. Пока он горит, нужно нажать и удерживать эту же кнопку.
+- Для сброса (reset) микроконтроллера `Freepad` нужно просто быстро нажать 10 раз любую кнопку.
+- Для принудительной отправки репорта по батарейке нужно просто быстро нажать 4 раза любую кнопку.
+
+
+## Настройка
+
+Рассмотрим настройку на примере управления яркостью умной лампы.
+
+- Выбрать кнопки, которые будут отвечать за увеличение и уменьшение яркости. Пусть это будут 1 и 2 кнопки.
+- Зайти в `z2m` в `Exposes` и назначить для 1 кнопки `brightness_level_up`, а для 2 кнопки `brightness_level_down`.<br>
+<div align="center"> 
+<a><img src="doc/images/switch_type_brightness_level_up.jpg" alt="Setting brightness level up"/><img src="doc/images/switch_type_brightness_level_down.jpg" alt="Setting brightness level up"/></a>
+</div>
+
+- Зайти в `z2m` в `Bind` и для 1 и 2 `endpoint'ов` настроить биндинг на нужную лампу.
+<div align="center"> 
+<a><img src="doc/images/bind_brightness_level_up.jpg" alt="Bind brightness level up" width="40%" height="auto"/><img src="doc/images/bind_brightness_level_down.jpg" alt="Bind brightness level up" width="40%" height="auto"/></a>
+</div>
+
+Не забываем после нажатия в web-интерфейсе `Bind` или выбора режма кнопки `Switch type` нажимать на любую кнопку на `Freepad'е` для того, чтобы он проснулся и принял изменения.
+
+Все готово. 
+
+Теперь при коротком нажатии на 1 кнопку лампа будет включаться. При двойном нажатии на 1 кнопку будет увеличивать яркость на один шаг. При удержании будет повышать яркость, пока удерживается кнопка.
+
+При коротком нажатии на 2 кнопку лампа будет выключаться. При двойном нажатии на 2 кнопку будет уменьшаться яркость на один шаг. При удержании будет уменьшаться яркость, пока удерживается кнопка.
 
 ---
 
-<img src="doc/images/board_pcb_top.jpg"/>
+## Потребление
+
+Если нажимать кнопку один раз в минуту, то батарейки должно хватить на чуть более 1 года.
+
+<div align="center"> 
+<a><img src="doc/images/battery_consumption_1.png" alt="Battery consumption 1" width="60%" height="auto"/><img src="doc/images/battery_consumption_2.png" alt="Battery consumption 2" width="60%" height="auto"/></a>
+</div>
+
+Но есть возможность еще больше сэкономить на потреблении. Не зависимо от настроек, при нажатии на любую кнопку `Freepad` будет отправлять команду или экшен на координатор. К примеру, вы не будете использовать автоматизации в УД для управления устройством. Вам нужно просто управлять яркостью. Для этого все лишние бинды можно удалить.
+
+По умолчанию, после настройки биндов для управления яркостью вкладка `Bind` будет выглядеть так
+
+<img src="doc/images/z2m_bind_2.jpg" alt="Bind 1"/>
+
+Если убрать все лишнее, то получим следующее
+
+<img src="doc/images/z2m_bind_2.jpg" alt="Bind 2"/>
+
+Теперь, при нажатии на кнопку будет уходить не две команды (одна на лампу, вторая на координатор), а одна (только на лампу).
+
+Нужно только проследить, чтобы в первом `endpoint'е` остался бинд на кластер `genPowerCfg` - это отвечает за репортинг заряда батарейки.
+
+Ну и последнее. Пульт в дежурном режиме спит. Если его вообще не трогать, то спать он будет 4 часа. Потом проснется, измерит батарейку, отправит репорт и опять уснет на 4 часа. 4 часа берутся из настройки репортинга батарейки из параметра `Max rep interval`. Если изменить это значение, то просыпаться `Freepad` будет уже исходя из этого зачения.
 
 ---
 
-<img src="doc/images/board_pcb_bottom.jpg"/>
+Связаться с Олегом, автором  схемы и платы, можно в **[Telegram](https://t.me/Novgorod_DIYZi)**.<br>
+Связаться со мной можно в **[Telegram](https://t.me/slacky1965)**.
+
+### Если захотите отблагодарить автора, то это можно сделать через [ЮMoney](https://yoomoney.ru/to/4100118300223495)
 
 ---
 
-<!-- https://oshwlab.com/novgorod73/zigbee-freepad >
+## История версий
+- 1.0.01
+	- Начало.
+
+[Наверх](#Top)
+
