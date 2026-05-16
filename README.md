@@ -135,8 +135,9 @@ Remote control with 8/12/20 buttons Zigbee End Device by TLSR8258 (ZTU module)
 Если нажимать кнопку один раз в минуту, то батарейки должно хватить на чуть более 1 года.
 
 <div align="center"> 
-<a><img src="doc/images/battery_consumption_1.png" alt="Battery consumption 1"/><img src="doc/images/battery_consumption_2.png" alt="Battery consumption 2"/></a>
+<a><img src="doc/images/battery_consumption_1.png" alt="Battery consumption 1" width="60%" height="auto"/><img src="doc/images/battery_consumption_2.png" alt="Battery consumption 2" width="60%" height="auto"/></a>
 </div>
+
 ---
 
 Связаться с Олегом, автором  схемы и платы, можно в **[Telegram](https://t.me/Novgorod_DIYZi)**.
