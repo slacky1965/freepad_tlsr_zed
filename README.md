@@ -166,7 +166,7 @@ Remote control with 8/12/20 buttons Zigbee End Device by TLSR8258 (ZTU module)
 
 По умолчанию, после настройки биндов для управления яркостью вкладка `Bind` будет выглядеть так
 
-<img src="doc/images/z2m_bind_2.jpg" alt="Bind 1"/>
+<img src="doc/images/z2m_bind_1.jpg" alt="Bind 1"/>
 
 Если убрать все лишнее, то получим следующее
 
