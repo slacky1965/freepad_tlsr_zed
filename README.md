@@ -128,9 +128,23 @@ Remote control with 8/12/20 buttons Zigbee End Device by TLSR8258 (ZTU module)
 
 При коротком нажатии на 2 кнопку лампа будет выключаться. При двойном нажатии на 2 кнопку будет уменьшаться яркость на один шаг. При удержании будет уменьшаться яркость, пока удерживается кнопка.
 
+---
+
+## Потребление
+
+Если нажимать кнопку один раз в минуту, то батарейки должно хватить на чуть более 1 года.
+
+<div align="center"> 
+<a><img src="doc/images/battery_consumption_1.png" alt="Battery consumption 1"/><img src="doc/images/battery_consumption_2.png" alt="Battery consumption 2"/></a>
+</div>
+---
+
+Связаться с Олегом, автором  схемы и платы, можно в **[Telegram](https://t.me/Novgorod_DIYZi)**.
 Связаться со мной можно в **[Telegram](https://t.me/slacky1965)**.
 
 ### Если захотите отблагодарить автора, то это можно сделать через [ЮMoney](https://yoomoney.ru/to/4100118300223495)
+
+---
 
 ## История версий
 - 1.0.01
