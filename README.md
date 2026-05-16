@@ -180,7 +180,7 @@ Remote control with 8/12/20 buttons Zigbee End Device by TLSR8258 (ZTU module)
 
 ---
 
-Связаться с Олегом, автором  схемы и платы, можно в **[Telegram](https://t.me/Novgorod_DIYZi)**.
+Связаться с Олегом, автором  схемы и платы, можно в **[Telegram](https://t.me/Novgorod_DIYZi)**.<br>
 Связаться со мной можно в **[Telegram](https://t.me/slacky1965)**.
 
 ### Если захотите отблагодарить автора, то это можно сделать через [ЮMoney](https://yoomoney.ru/to/4100118300223495)
