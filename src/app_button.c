@@ -89,8 +89,6 @@ static void read_button_color_temp(uint8_t i) {
     uint8_t up_down = 0xFF;
     button_t *button = &app_button.button[i];
     app_button_t *key = &app_button;
-//    zcl_levelAttr_t *levelAttr = zcl_levelAttrsGet();
-//    levelAttr += i;
 
     switch(device_settings.switchType[i]) {
         case ZCL_CUSTOM_SWITCH_TYPE_COLOR_TEMP_MOVE_UP:
@@ -197,7 +195,7 @@ static void read_button_color_temp(uint8_t i) {
                             app_color_step_temp(i+1, up_down);
                         }
                         break;
-                    case ACTION_QUADRUPLE:                                      // 4
+                    case BATTERY_COUNTER:                                      // 4
                         batteryCb(NULL);
                         if (!g_appCtx.timerSetPollRateEvt) {
                             app_setPollRate(TIMEOUT_20SEC, 5);
